@@ -1,0 +1,4 @@
+import Link from "next/link";
+import {BriefcaseBusiness,Building2,CircleUserRound} from "lucide-react";
+import {Logo} from "./logo";
+export function Nav(){return <header className="sticky top-0 z-50 border-b border-black/5 bg-[#F8F6F0]/90 backdrop-blur"><div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8"><Logo/><nav className="flex items-center gap-1 text-sm font-semibold"><Link href="/worker" className="focus-ring hidden rounded-xl px-3 py-2 hover:bg-white sm:flex sm:items-center sm:gap-2"><BriefcaseBusiness size={17}/>For workers</Link><Link href="/business" className="focus-ring hidden rounded-xl px-3 py-2 hover:bg-white sm:flex sm:items-center sm:gap-2"><Building2 size={17}/>For business</Link><Link href="/worker" className="focus-ring ml-1 flex items-center gap-2 rounded-xl bg-ink px-4 py-2 text-white"><CircleUserRound size={17}/>Open app</Link></nav></div></header>}
