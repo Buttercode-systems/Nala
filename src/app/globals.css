@@ -1,0 +1,4 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root{color-scheme:light}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#F8F6F0;color:#14231D;font-family:Arial,Helvetica,sans-serif}button,a{-webkit-tap-highlight-color:transparent}.focus-ring:focus-visible{outline:3px solid #F5B94C;outline-offset:3px}
