@@ -67,8 +67,52 @@
  .simulation-options>div>svg{display:none}
  .passport-evidence-row{display:grid;gap:5px}
  .passport-evidence-row span:last-child{white-space:normal}
- .premium-nav{backdrop-filter:none;background:var(--sand)}
+ .premium-nav{position:relative;top:auto;backdrop-filter:none;background:var(--sand)}
  .nav-inner{height:64px;padding:0 18px}
  .wordmark{font-size:28px}
  .nav-app{padding:10px 14px;font-size:13px}
+}
+
+/* Samsung Internet/Chrome on some Android GPUs can leave stale composited layers
+   behind while scrolling pages that combine sticky blur, transforms and animated
+   descendants. On touch-first devices, keep the landing page on the normal paint
+   path. This prevents repeated/ghosted cards without changing the desktop design. */
+@media (hover:none), (pointer:coarse), (max-width:900px){
+ .landing-shell,
+ .landing-shell main,
+ .landing-shell section,
+ .landing-shell article,
+ .landing-shell header,
+ .landing-shell footer,
+ .landing-shell [class*="card"],
+ .landing-shell [class*="stack"],
+ .landing-shell [class*="board"]{
+  isolation:isolate;
+  backface-visibility:visible;
+  -webkit-backface-visibility:visible;
+ }
+
+ .premium-nav,
+ .journey-board,
+ .journey-board::before,
+ .nav-app,
+ .primary-cta,
+ .secondary-cta,
+ .outcome-card,
+ .live-pill span,
+ .reveal-up,
+ .delay-1{
+  transform:none!important;
+  animation:none!important;
+  transition:none!important;
+  filter:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  will-change:auto!important;
+ }
+
+ .premium-nav{position:relative!important;top:auto!important;background:var(--sand)!important}
+ .journey-board::before{inset:12px -12px -12px 12px}
+ .outcome-stack,.business-value,.comparison-grid,.starter-task-grid{transform:none!important;filter:none!important}
+ .outcome-card,.business-value>div,.starter-task-card,.comparison-muted,.comparison-nala{background-clip:padding-box}
 }
