@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {ArrowLeft,Building2,ShieldCheck,UsersRound} from "lucide-react";
 import {authenticate} from "./actions";
 
@@ -7,12 +6,12 @@ type Props={searchParams:Promise<{role?:string;error?:string;message?:string;nex
 export default async function AuthPage({searchParams}:Props){
  const params=await searchParams;
  const role=params.role==="business"?"business":"worker";
- const next=params.next?.startsWith("/")?params.next:`/${role}`;
+ const next=params.next?.startsWith("/")&&!params.next.startsWith("//")?params.next:`/${role}`;
  const intent=params.intent||"continue";
  const query=(targetRole:string)=>`/auth?role=${targetRole}&next=${encodeURIComponent(next)}&intent=${encodeURIComponent(intent)}`;
  return <main className="min-h-[100svh] bg-[#f3efe6] px-4 py-6 text-[#12211a] sm:px-6 lg:px-8">
   <div className="mx-auto max-w-5xl">
-   <Link href={next} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-bold"><ArrowLeft size={16}/>Continue browsing</Link>
+   <a href={next} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-bold"><ArrowLeft size={16}/>Continue browsing</a>
    <div className="mt-6 grid overflow-hidden rounded-[30px] border border-black/10 bg-white lg:grid-cols-[.9fr_1.1fr]">
     <section className="bg-[#0d2b20] p-6 text-white sm:p-9 lg:p-12">
      <p className="text-xs font-black tracking-[.16em] text-[#dff09f]">ACCOUNT REQUIRED FOR THIS ACTION</p>
@@ -22,8 +21,8 @@ export default async function AuthPage({searchParams}:Props){
     </section>
     <section className="p-6 sm:p-9 lg:p-12">
      <div className="grid grid-cols-2 gap-2 rounded-2xl bg-[#f3efe6] p-1">
-      <Link href={query("worker")} className={`rounded-xl px-4 py-3 text-center text-sm font-black ${role==="worker"?"bg-white shadow-sm":""}`}>Worker</Link>
-      <Link href={query("business")} className={`rounded-xl px-4 py-3 text-center text-sm font-black ${role==="business"?"bg-white shadow-sm":""}`}>Business</Link>
+      <a href={query("worker")} className={`rounded-xl px-4 py-3 text-center text-sm font-black ${role==="worker"?"bg-white shadow-sm":""}`}>Worker</a>
+      <a href={query("business")} className={`rounded-xl px-4 py-3 text-center text-sm font-black ${role==="business"?"bg-white shadow-sm":""}`}>Business</a>
      </div>
      <h2 className="mt-7 text-3xl font-black">Join or sign in as a {role}.</h2>
      {params.error?<p className="mt-4 rounded-2xl bg-[#fde8e2] p-4 text-sm font-bold text-[#8b351f]">{params.error}</p>:null}
