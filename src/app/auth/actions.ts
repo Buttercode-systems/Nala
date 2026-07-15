@@ -18,6 +18,7 @@ const schema=z.object({
 
 function safeNext(value:string|undefined,fallback:string){return value?.startsWith("/")&&!value.startsWith("//")?value:fallback}
 function authUrl(role:string,next:string,intent:string|undefined,key:"error"|"message",value:string){return `/auth?role=${role}&next=${encodeURIComponent(next)}&intent=${encodeURIComponent(intent||"continue")}&${key}=${encodeURIComponent(value)}`}
+function go(path:string):never{return redirect(path as never)}
 
 async function ensureRoleProfile(supabase:SupabaseClient,user:User,requestedName?:string){
  const role=user.user_metadata?.role==="business"?"business":"worker";
@@ -37,25 +38,25 @@ export async function authenticate(formData:FormData){
   email:formData.get("email"),password:formData.get("password"),displayName:formData.get("displayName")||undefined,
   role:formData.get("role"),mode:formData.get("mode"),next:formData.get("next")||undefined,intent:formData.get("intent")||undefined
  });
- if(!parsed.success)redirect("/auth?error=Please+check+your+details");
+ if(!parsed.success)go("/auth?error=Please+check+your+details");
  const {email,password,displayName,role,mode,intent}=parsed.data;
  const next=safeNext(parsed.data.next,`/${role}`);
  const supabase=await createServerSupabaseClient();
  if(mode==="signup"){
-  if(!displayName)redirect(authUrl(role,next,intent,"error","Please enter your name"));
+  if(!displayName)go(authUrl(role,next,intent,"error","Please enter your name"));
   const requestHeaders=await headers();
   const origin=requestHeaders.get("origin")||"https://nala-sa.vercel.app";
   const confirmationNext=`${next}${next.includes("?")?"&":"?"}auth=confirmed`;
   const {data,error}=await supabase.auth.signUp({email,password,options:{emailRedirectTo:`${origin}/auth/confirm?next=${encodeURIComponent(confirmationNext)}`,data:{role,display_name:displayName}}});
-  if(error)redirect(authUrl(role,next,intent,"error",error.message));
+  if(error)go(authUrl(role,next,intent,"error",error.message));
   if(data.session&&data.user){
    await ensureRoleProfile(supabase,data.user,displayName);
-   redirect(next);
+   go(next);
   }
-  redirect(authUrl(role,next,intent,"message","Check your email to confirm your account."));
+  go(authUrl(role,next,intent,"message","Check your email to confirm your account."));
  }
  const {data,error}=await supabase.auth.signInWithPassword({email,password});
- if(error)redirect(authUrl(role,next,intent,"error",error.message));
+ if(error)go(authUrl(role,next,intent,"error",error.message));
  await ensureRoleProfile(supabase,data.user,displayName);
- redirect(next);
+ go(next);
 }
