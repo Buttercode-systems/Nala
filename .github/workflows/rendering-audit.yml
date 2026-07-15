@@ -1,0 +1,32 @@
+name: Rendering audit
+
+on:
+  push:
+    branches:
+      - fix/rendering-architecture-audit
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  browser-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npx --yes playwright@1.55.0 install --with-deps chromium
+      - run: npm run build
+      - run: npx --yes playwright@1.55.0 test
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rendering-audit-artifacts
+          path: |
+            test-results
+            playwright-report
+          if-no-files-found: ignore
