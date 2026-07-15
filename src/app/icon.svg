@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Nala</title>
+  <desc id="desc">Lowercase Nala n symbol with a clay opportunity dot.</desc>
+  <rect width="512" height="512" rx="112" fill="#0D2F24"/>
+  <path d="M132 350V162h70v24c18-21 44-33 76-33 63 0 102 41 102 111v86h-76v-78c0-36-16-55-46-55-32 0-50 22-50 62v71h-76Z" fill="#FFFDF8"/>
+  <circle cx="369" cy="143" r="25" fill="#C86F4C"/>
+</svg>
