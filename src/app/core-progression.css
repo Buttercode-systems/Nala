@@ -1,56 +1,6 @@
 /* Core worker progression navigation. Keeps the approved floating-pill language while treating progression as a permanent product pathway. */
-.progression-dock{
-  position:fixed;
-  right:18px;
-  bottom:18px;
-  z-index:55;
-  display:flex;
-  align-items:stretch;
-  gap:8px;
-}
-.progression-dock .progression-launcher{
-  position:static;
-  min-height:48px;
-  padding:9px 14px;
-  box-shadow:0 12px 28px rgba(18,33,26,.18);
-}
-.progression-dock .progression-launcher span{
-  display:flex;
-  flex-direction:column;
-  line-height:1.05;
-}
-.progression-dock .progression-launcher small{
-  margin-bottom:4px;
-  font-size:7px;
-  font-weight:950;
-  letter-spacing:.12em;
-  opacity:.72;
-}
-.progression-launcher-primary{
-  background:#dff09f!important;
-  color:#1d513b!important;
-}
-.progression-launcher-secondary{
-  background:#12211a!important;
-  color:#fff!important;
-}
-@media(max-width:760px){
-  .progression-dock{
-    right:12px;
-    bottom:12px;
-    left:12px;
-    justify-content:flex-end;
-    gap:6px;
-  }
-  .progression-dock .progression-launcher{
-    min-height:44px;
-    padding:8px 11px;
-    font-size:10px;
-  }
-  .progression-dock .progression-launcher small{font-size:6px}
-}
-@media(max-width:390px){
-  .progression-dock .progression-launcher-secondary span{display:none}
-  .progression-dock .progression-launcher-secondary{width:44px;justify-content:center;padding:0}
-}
-@media print{.progression-dock{display:none!important}}
+.progression-dock{position:fixed;right:18px;bottom:18px;z-index:55;display:flex;align-items:stretch;gap:8px}.progression-dock .progression-launcher{position:static;min-height:48px;padding:9px 14px;box-shadow:0 12px 28px rgba(18,33,26,.18)}.progression-dock .progression-launcher span{display:flex;flex-direction:column;line-height:1.05}.progression-dock .progression-launcher small{margin-bottom:4px;font-size:7px;font-weight:950;letter-spacing:.12em;opacity:.72}.progression-launcher-primary{background:#dff09f!important;color:#1d513b!important}.progression-launcher-secondary{background:#12211a!important;color:#fff!important}
+.worker-core-prompt,.worker-core-progress{position:fixed;right:18px;bottom:82px;z-index:54;width:min(420px,calc(100vw - 36px));border:1px solid rgba(18,33,26,.12);border-radius:22px;background:#fffdf8;padding:16px;box-shadow:0 18px 45px rgba(18,33,26,.16)}.worker-core-prompt{display:grid;grid-template-columns:auto 1fr;gap:12px}.worker-core-prompt-icon{display:grid;width:40px;height:40px;place-items:center;border-radius:14px;background:#dff09f;color:#1d513b}.worker-core-prompt small,.worker-core-progress small{display:block;font-size:8px;font-weight:950;letter-spacing:.13em;color:#9a4d31}.worker-core-prompt strong,.worker-core-progress strong{display:block;margin-top:4px;font-size:15px}.worker-core-prompt p{margin:5px 0 0;font-size:11px;line-height:1.45;color:rgba(18,33,26,.62)}.worker-core-prompt-actions{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px}.worker-core-prompt-actions a,.worker-core-progress>a{display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:#12211a;color:#fff;padding:8px 11px;font-size:10px;font-weight:850;text-decoration:none}.worker-core-prompt-actions a:last-child{background:#f0eadc;color:#1d513b}.worker-core-progress{display:flex;align-items:center;justify-content:space-between;gap:12px}.worker-core-progress>div:first-child{display:flex;align-items:center;gap:9px}.worker-core-progress-stats{display:flex;flex-wrap:wrap;gap:6px}.worker-core-progress-stats span{display:inline-flex;align-items:center;gap:4px;border-radius:999px;background:#f0eadc;padding:6px 8px;font-size:9px;font-weight:800}
+@media(max-width:760px){.progression-dock{right:12px;bottom:12px;left:12px;justify-content:flex-end;gap:6px}.progression-dock .progression-launcher{min-height:44px;padding:8px 11px;font-size:10px}.progression-dock .progression-launcher small{font-size:6px}.worker-core-prompt,.worker-core-progress{right:12px;bottom:70px;width:calc(100vw - 24px);border-radius:18px;padding:13px}.worker-core-progress{align-items:flex-start;flex-direction:column}.worker-core-progress-stats{width:100%}}
+@media(max-width:390px){.progression-dock .progression-launcher-secondary span{display:none}.progression-dock .progression-launcher-secondary{width:44px;justify-content:center;padding:0}.worker-core-prompt p{font-size:10px}}
+@media print{.progression-dock,.worker-core-prompt,.worker-core-progress{display:none!important}}
