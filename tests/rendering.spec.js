@@ -1,6 +1,20 @@
 const { test, expect } = require('@playwright/test');
 
-const routes = ['/', '/worker', '/business', '/passport', '/tasks/task-1', '/tasks/task-1/readiness'];
+const routes = [
+  '/',
+  '/worker',
+  '/worker/availability',
+  '/worker/growth',
+  '/business',
+  '/business/intake',
+  '/business/operations',
+  '/market',
+  '/auth',
+  '/operations/distribution',
+  '/passport',
+  '/tasks/task-1',
+  '/tasks/task-1/readiness',
+];
 
 async function assertNoHorizontalOverflow(page) {
   const dimensions = await page.evaluate(() => ({
@@ -69,12 +83,12 @@ test('restored landing remains structurally stable', async ({ page }) => {
   await page.goto('/', { waitUntil: 'networkidle' });
   await expect(page.locator('.starter-task-card')).toHaveCount(0);
   await expect(page.locator('.outcome-card')).toHaveCount(5);
-  await expect(page.locator('.step-row')).toHaveCount(4);
+  await expect(page.locator('.step-row')).toHaveCount(5);
   await assertNoElementOverlap(page, '.outcome-card');
   await assertNoElementOverlap(page, '.step-row');
   await scrollAndCapture(page, 'landing-structure');
   await expect(page.locator('.outcome-card')).toHaveCount(5);
-  await expect(page.locator('.step-row')).toHaveCount(4);
+  await expect(page.locator('.step-row')).toHaveCount(5);
 });
 
 test('landing survives repeated mobile and desktop viewport changes', async ({ page }) => {
@@ -95,5 +109,35 @@ test('landing survives repeated mobile and desktop viewport changes', async ({ p
   await scrollAndCapture(page, 'viewport-mobile-again');
   await assertNoHorizontalOverflow(page);
   await expect(page.locator('.outcome-card')).toHaveCount(5);
-  await expect(page.locator('.step-row')).toHaveCount(4);
+  await expect(page.locator('.step-row')).toHaveCount(5);
+});
+
+test('availability remains stable while paused and across viewport changes', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 740 });
+  await page.goto('/worker/availability', { waitUntil: 'networkidle' });
+  await expect(page.getByRole('heading', { name: 'Know the real market status before you wait for work.' })).toBeVisible();
+  const mobileBefore = await page.locator('main > div').boundingBox();
+  await page.waitForTimeout(1500);
+  const mobileAfter = await page.locator('main > div').boundingBox();
+  expect(mobileAfter).toEqual(mobileBefore);
+  await assertNoHorizontalOverflow(page);
+
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.waitForTimeout(500);
+  await expect(page.getByRole('heading', { name: 'Know the real market status before you wait for work.' })).toBeVisible();
+  const desktopBefore = await page.locator('main > div').boundingBox();
+  await page.waitForTimeout(1500);
+  const desktopAfter = await page.locator('main > div').boundingBox();
+  expect(desktopAfter).toEqual(desktopBefore);
+  await assertNoHorizontalOverflow(page);
+});
+
+test('optional account entry renders for both roles without blocking public routes', async ({ page }) => {
+  await page.goto('/auth?role=worker', { waitUntil: 'networkidle' });
+  await expect(page.getByRole('heading', { name: 'Join or sign in as a worker.' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Create account' })).toBeVisible();
+  await page.goto('/auth?role=business', { waitUntil: 'networkidle' });
+  await expect(page.getByRole('heading', { name: 'Join or sign in as a business.' })).toBeVisible();
+  await page.goto('/market', { waitUntil: 'networkidle' });
+  await expect(page.getByText('Public preview · no sign-in required')).toBeVisible();
 });
