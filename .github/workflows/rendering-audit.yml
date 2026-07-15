@@ -18,9 +18,10 @@ jobs:
         with:
           node-version: 22
       - run: npm install
-      - run: npx --yes playwright@1.55.0 install --with-deps chromium
+      - run: npm install --no-save @playwright/test@1.55.0
+      - run: npx playwright install --with-deps chromium
       - run: npm run build
-      - run: npx --yes playwright@1.55.0 test
+      - run: npx playwright test
       - if: always()
         uses: actions/upload-artifact@v4
         with:
