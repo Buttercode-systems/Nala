@@ -14,7 +14,7 @@ The originally generated package was audited against the current production prod
 - Added contact sheets for square, story, carousel, landscape and video-cover systems.
 - Added a repository source-of-truth record.
 - Rebuilt the asset manifest with actual dimensions, byte sizes and SHA-256 checksums.
-- Strengthened publishing rules for testimonial, statistic, case-study, launch-date and partner placeholders.
+- Strengthened source-review requirements for every proof-oriented placeholder.
 - Replaced the original thin guidelines document with a corrected QA2 production guide.
 
 ## Archive
