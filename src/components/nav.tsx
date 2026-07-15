@@ -11,7 +11,8 @@ export function Nav(){
     <a href="#for-business">For businesses</a>
     <Link href="/market">Live market</Link>
     <a href="#trust">Trust & safety</a>
-    <Link href="/auth" className="nav-app">Join or sign in <ArrowUpRight size={16}/></Link>
+    <Link href="/auth">Sign in</Link>
+    <Link href="/worker" className="nav-app">Open Nala <ArrowUpRight size={16}/></Link>
    </nav>
   </div>
  </header>
