@@ -1,5 +1,5 @@
 import Link from "next/link";
-import {ArrowRight, BadgeCheck, BriefcaseBusiness, Building2, Check, ChevronRight, Clock3, HeartHandshake, ShieldCheck, Sparkles, Star, UsersRound} from "lucide-react";
+import {ArrowRight, BadgeCheck, BriefcaseBusiness, Building2, Check, ChevronRight, CircleDollarSign, HeartHandshake, ShieldCheck, Sparkles, Star, UsersRound} from "lucide-react";
 import {Nav} from "@/components/nav";
 
 const workerSteps=[
@@ -7,12 +7,6 @@ const workerSteps=[
   ["02","Practise before real work","Nala gives you a short, guided simulation so you can build confidence and the business can trust that you understand the task."],
   ["03","Complete safe, paid work","You see the scope, payment, deadline and evidence requirements before accepting. Nala guides the process without hiding what is expected."],
   ["04","Turn work into proof","The business verifies your quality, reliability and communication. That evidence grows your work passport and unlocks better opportunities."],
-];
-
-const starterTasks=[
- {title:"Confirm tomorrow’s appointments",meta:"Customer support · 45–60 min",pay:"R100",proof:"Customer communication"},
- {title:"Follow up on open quotations",meta:"Sales admin · 60–90 min",pay:"R150",proof:"Professional writing"},
- {title:"Clean a customer spreadsheet",meta:"Data admin · About 60 min",pay:"R120",proof:"Data accuracy"},
 ];
 
 const businessOutcomes=["Confirm tomorrow’s appointments","Prepare quotation follow-ups","Clean customer spreadsheets","Draft social content","Prepare invoice reminders"];
@@ -38,7 +32,7 @@ export default function Home(){
      <div className="journey-board reveal-up delay-1" aria-label="Example Nala work journey">
       <div className="journey-topline"><span>THANDI’S FIRST WORK JOURNEY</span><span className="live-pill"><span/>IN PROGRESS</span></div>
       <div className="journey-person">
-       <div className="portrait-mark" aria-hidden="true"><span>TM</span></div>
+       <div className="portrait-mark">TM</div>
        <div><strong>Thandi Mokoena</strong><p>22 · Matric · Strong with people</p></div>
        <div className="journey-score"><Star size={15} fill="currentColor"/> 96%</div>
       </div>
@@ -63,11 +57,6 @@ export default function Home(){
     <div className="hero-footnote"><span>THE GAP NALA CLOSES</span><p>“You need experience to get hired.” <strong>But where does the first experience come from?</strong></p></div>
    </section>
 
-   <section className="starter-preview" aria-labelledby="starter-preview-title">
-    <div className="starter-preview-heading"><div><span className="section-kicker">A clearer first step</span><h2 id="starter-preview-title">See the work, pay and proof before you commit.</h2></div><p>These are sample task formats inside Nala. Each one shows its scope, expected time, readiness requirement and the evidence it can add to a worker’s history.</p></div>
-    <div className="starter-task-grid">{starterTasks.map(task=><article className="starter-task-card" key={task.title}><div className="starter-task-top"><span>STARTER TASK</span><strong>{task.pay}</strong></div><h3>{task.title}</h3><p><Clock3 size={14}/>{task.meta}</p><div className="starter-task-proof"><Sparkles size={15}/><span>Readiness required</span><strong>{task.proof}</strong></div></article>)}</div>
-   </section>
-
    <section className="problem-section" id="why-nala">
     <div className="section-kicker">The problem is not a lack of willingness</div>
     <div className="problem-grid">
@@ -84,8 +73,7 @@ export default function Home(){
    <section className="how-section" id="how-it-works">
     <div className="how-heading"><div><span className="section-kicker light">For young people</span><h2>From “no experience” to evidence that speaks for you.</h2></div><p>Nala does not simply send you to another job listing. It helps you create the experience employers keep asking for.</p></div>
     <div className="steps-list">{workerSteps.map(([number,title,body])=><article key={number} className="step-row"><span className="step-number">{number}</span><h3>{title}</h3><p>{body}</p></article>)}</div>
-    <div className="simulation-proof" aria-label="Example readiness simulation activity"><div className="simulation-proof-copy"><span>INSIDE A READINESS MISSION</span><h3>Practise the decision, not just the answer.</h3><p>A worker reviews a real situation, chooses the safe action and receives coaching before moving forward.</p></div><div className="simulation-sample"><div className="simulation-sample-head"><span>Appointment confirmation</span><strong>Activity 3 of 5</strong></div><p>A customer says they may arrive 25 minutes late. What should you do?</p><div className="simulation-options"><div><span>A</span>Promise the booking will remain available.</div><div className="recommended"><span>B</span>Record the reply and ask the business to confirm what is possible.<BadgeCheck size={17}/></div><div><span>C</span>Cancel the appointment immediately.</div></div><div className="simulation-coaching"><ShieldCheck size={17}/><div><strong>Why this is safer</strong><p>The worker records the customer’s request without making a promise outside their authority.</p></div></div></div></div>
-    <div className="passport-strip"><div><BadgeCheck size={34}/><span>PROOF-OF-WORK PASSPORT</span></div><div className="passport-strip-body"><p>Instead of only saying “I am hardworking,” show verified tasks, quality scores, skills demonstrated and businesses that would hire you again.</p><div className="passport-evidence-row"><span><strong>Appointment confirmation</strong> · Verified by Lerato Beauty Studio</span><span>Communication · 5/5</span></div></div><Link href="/passport">See an example passport <ArrowRight size={17}/></Link></div>
+    <div className="passport-strip"><div><BadgeCheck size={34}/><span>PROOF-OF-WORK PASSPORT</span></div><p>Instead of only saying “I am hardworking,” show verified tasks, quality scores, skills demonstrated and businesses that would hire you again.</p><Link href="/passport">See an example passport <ArrowRight size={17}/></Link></div>
    </section>
 
    <section className="business-section" id="for-business">
