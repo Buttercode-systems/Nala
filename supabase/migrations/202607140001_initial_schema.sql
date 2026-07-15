@@ -1,0 +1,17 @@
+create extension if not exists "pgcrypto";
+create type public.user_role as enum ('worker','business','admin');
+create type public.task_status as enum ('draft','open','assigned','in_progress','submitted','approved','disputed','cancelled');
+create table public.profiles (id uuid primary key references auth.users(id) on delete cascade,role public.user_role not null,full_name text not null,phone text,created_at timestamptz not null default now());
+create table public.businesses (id uuid primary key default gen_random_uuid(),owner_id uuid not null references public.profiles(id),name text not null,verification_status text not null default 'pending',created_at timestamptz not null default now());
+create table public.tasks (id uuid primary key default gen_random_uuid(),business_id uuid not null references public.businesses(id),worker_id uuid references public.profiles(id),title text not null,description text not null,payment_cents integer not null check(payment_cents>0),status public.task_status not null default 'draft',scope_snapshot jsonb not null default '{}'::jsonb,created_at timestamptz not null default now());
+create table public.task_submissions (id uuid primary key default gen_random_uuid(),task_id uuid not null unique references public.tasks(id) on delete cascade,worker_id uuid not null references public.profiles(id),evidence jsonb not null,submitted_at timestamptz not null default now());
+create table public.task_reviews (id uuid primary key default gen_random_uuid(),task_id uuid not null unique references public.tasks(id) on delete cascade,reviewer_id uuid not null references public.profiles(id),quality_score integer not null check(quality_score between 1 and 5),reliability_score integer not null check(reliability_score between 1 and 5),feedback text,would_hire_again boolean not null,created_at timestamptz not null default now());
+alter table public.profiles enable row level security;alter table public.businesses enable row level security;alter table public.tasks enable row level security;alter table public.task_submissions enable row level security;alter table public.task_reviews enable row level security;
+create policy "profiles read own" on public.profiles for select using(auth.uid()=id);
+create policy "profiles update own" on public.profiles for update using(auth.uid()=id);
+create policy "business owners manage businesses" on public.businesses for all using(auth.uid()=owner_id) with check(auth.uid()=owner_id);
+create policy "open tasks visible or participant" on public.tasks for select using(status='open' or worker_id=auth.uid() or exists(select 1 from public.businesses b where b.id=business_id and b.owner_id=auth.uid()));
+create policy "business owners create tasks" on public.tasks for insert with check(exists(select 1 from public.businesses b where b.id=business_id and b.owner_id=auth.uid()));
+create policy "participants update tasks" on public.tasks for update using(worker_id=auth.uid() or exists(select 1 from public.businesses b where b.id=business_id and b.owner_id=auth.uid()));
+create policy "workers manage own submissions" on public.task_submissions for all using(worker_id=auth.uid()) with check(worker_id=auth.uid());
+create policy "participants read reviews" on public.task_reviews for select using(exists(select 1 from public.tasks t join public.businesses b on b.id=t.business_id where t.id=task_id and (t.worker_id=auth.uid() or b.owner_id=auth.uid())));
