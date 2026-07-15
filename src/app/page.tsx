@@ -1,12 +1,13 @@
 import Link from "next/link";
-import {ArrowRight, BadgeCheck, BriefcaseBusiness, Building2, Check, ChevronRight, CircleDollarSign, HeartHandshake, ShieldCheck, Sparkles, Star, UsersRound} from "lucide-react";
+import {ArrowRight, BadgeCheck, BriefcaseBusiness, Building2, Check, ChevronRight, HeartHandshake, ShieldCheck, Sparkles, Star, Target, UsersRound} from "lucide-react";
 import {Nav} from "@/components/nav";
 
 const workerSteps=[
   ["01","Tell us what you can already do","Formal jobs are not the only experience that counts. Helping at a salon, selling products, managing a WhatsApp group or organising community work can all reveal useful skills."],
   ["02","Practise before real work","Nala gives you a short, guided simulation so you can build confidence and the business can trust that you understand the task."],
   ["03","Complete safe, paid work","You see the scope, payment, deadline and evidence requirements before accepting. Nala guides the process without hiding what is expected."],
-  ["04","Turn work into proof","The business verifies your quality, reliability and communication. That evidence grows your work passport and unlocks better opportunities."],
+  ["04","Turn work into proof","The business verifies your quality, reliability and communication. That evidence grows your work passport."],
+  ["05","Know what to do next","Nala uses your verified work and passed simulations to explain your strongest evidence, recommend suitable work and show what to practise next."],
 ];
 
 const businessOutcomes=["Confirm tomorrow’s appointments","Prepare quotation follow-ups","Clean customer spreadsheets","Draft social content","Prepare invoice reminders"];
@@ -21,12 +22,12 @@ export default function Home(){
      <div className="hero-copy reveal-up">
       <div className="eyebrow"><span className="eyebrow-dot"/>Built for the first opportunity</div>
       <h1>Experience should not be the thing that keeps you from getting experience.</h1>
-      <p className="hero-lede">Nala helps young people earn their first income through safe, structured work for real businesses—and turns every completed task into verified proof that they can be trusted with more.</p>
+      <p className="hero-lede">Nala helps young people earn their first income through safe, structured work for real businesses—then turns verified evidence into a clear next step toward better opportunities.</p>
       <div className="hero-actions">
        <Link href="/worker" className="primary-cta">Start building experience <ArrowRight size={19}/></Link>
        <Link href="/business" className="secondary-cta">I run a business <Building2 size={18}/></Link>
       </div>
-      <div className="trust-line"><ShieldCheck size={17}/><span>Clear scope. Fair payment. Verified work.</span></div>
+      <div className="trust-line"><ShieldCheck size={17}/><span>Clear scope. Fair payment. Verified work. Guided progress.</span></div>
      </div>
 
      <div className="journey-board reveal-up delay-1" aria-label="Example Nala work journey">
@@ -48,13 +49,13 @@ export default function Home(){
        <div className="ticket-pay"><small>YOU EARN</small><strong>R100</strong></div>
       </div>
       <div className="passport-preview">
-       <div className="passport-icon"><BadgeCheck/></div>
-       <div><span>WHAT THIS WILL PROVE</span><strong>Customer communication</strong><p>Plus admin accuracy and reliability</p></div>
+       <div className="passport-icon"><Target/></div>
+       <div><span>WHAT COMES NEXT</span><strong>Customer-support progression</strong><p>Recommended from verified evidence—not guesswork</p></div>
        <ChevronRight/>
       </div>
      </div>
     </div>
-    <div className="hero-footnote"><span>THE GAP NALA CLOSES</span><p>“You need experience to get hired.” <strong>But where does the first experience come from?</strong></p></div>
+    <div className="hero-footnote"><span>THE GAP NALA CLOSES</span><p>“You need experience to get hired.” <strong>But where does the first experience—and the next step—come from?</strong></p></div>
    </section>
 
    <section className="problem-section" id="why-nala">
@@ -71,9 +72,9 @@ export default function Home(){
    </section>
 
    <section className="how-section" id="how-it-works">
-    <div className="how-heading"><div><span className="section-kicker light">For young people</span><h2>From “no experience” to evidence that speaks for you.</h2></div><p>Nala does not simply send you to another job listing. It helps you create the experience employers keep asking for.</p></div>
+    <div className="how-heading"><div><span className="section-kicker light">For young people</span><h2>From “no experience” to evidence—and a next step that makes sense.</h2></div><p>Nala does not simply send you to another job listing. It helps you create experience, prove it and progress from it.</p></div>
     <div className="steps-list">{workerSteps.map(([number,title,body])=><article key={number} className="step-row"><span className="step-number">{number}</span><h3>{title}</h3><p>{body}</p></article>)}</div>
-    <div className="passport-strip"><div><BadgeCheck size={34}/><span>PROOF-OF-WORK PASSPORT</span></div><p>Instead of only saying “I am hardworking,” show verified tasks, quality scores, skills demonstrated and businesses that would hire you again.</p><Link href="/passport">See an example passport <ArrowRight size={17}/></Link></div>
+    <div className="passport-strip"><div><BadgeCheck size={34}/><span>WORK PASSPORT + MY NEXT STEP</span></div><p>Show verified tasks and demonstrated skills, track economic progress, then use that evidence to find suitable work and understand what to practise next.</p><Link href="/worker/growth">See how progression works <ArrowRight size={17}/></Link></div>
    </section>
 
    <section className="business-section" id="for-business">
@@ -96,7 +97,7 @@ export default function Home(){
     <div className="comparison-grid">
      <div className="comparison-muted"><span>TYPICAL JOB PLATFORM</span><h3>Lists opportunities</h3><p>Then asks applicants to already have the experience, references and confidence needed to compete.</p></div>
      <div className="comparison-arrow"><ArrowRight/></div>
-     <div className="comparison-nala"><span>NALA</span><h3>Creates the first credible experience</h3><p>Practice → paid work → business verification → portable proof → better opportunity.</p></div>
+     <div className="comparison-nala"><span>NALA</span><h3>Creates evidence and guides progression</h3><p>Practice → paid work → business verification → portable proof → evidence-based next step.</p></div>
     </div>
    </section>
 
@@ -108,7 +109,7 @@ export default function Home(){
    <section className="final-cta">
     <div className="cta-mark">nala.</div>
     <h2>Your first chance should lead somewhere.</h2>
-    <p>Earn the first income. Build the first proof. Unlock the next opportunity.</p>
+    <p>Earn the first income. Build the first proof. Follow the next step.</p>
     <div className="hero-actions centered"><Link href="/worker" className="primary-cta light-cta">Start as a worker <ArrowRight size={19}/></Link><Link href="/business" className="secondary-cta dark-secondary">Create work for someone <Building2 size={18}/></Link></div>
    </section>
   </main>
