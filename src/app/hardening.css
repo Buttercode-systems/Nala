@@ -10,4 +10,6 @@
 .workspace-role-worker .app-topbar::after{content:"Worker workspace"}
 .workspace-role-business .app-topbar::after{content:"Business workspace"}
 .workspace-role-admin .app-topbar::after{content:"Operations workspace"}
-@media(max-width:720px){.workspace-role-worker .app-topbar::after,.workspace-role-business .app-topbar::after,.workspace-role-admin .app-topbar::after{display:none}}
+.app-topbar .outline-button{min-height:34px;padding:7px 12px!important;gap:6px;font-size:11px;font-weight:800;line-height:1;box-shadow:none}
+.app-topbar .status-chip{padding:6px 9px;font-size:9px}
+@media(max-width:720px){.workspace-role-worker .app-topbar::after,.workspace-role-business .app-topbar::after,.workspace-role-admin .app-topbar::after{display:none}.app-topbar .outline-button{min-height:32px;padding:6px 10px!important;font-size:10px}.app-topbar .status-chip{display:none}}
