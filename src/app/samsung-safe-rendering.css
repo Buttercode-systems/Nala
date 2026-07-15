@@ -1,0 +1,111 @@
+/* Samsung Internet can corrupt long, layered pages while scrolling on some Galaxy GPUs.
+   This mode is activated before first paint by layout.tsx and deliberately uses a
+   conservative 2D paint path only for Samsung Internet. Other browsers keep the
+   approved Nala presentation unchanged. */
+
+html.samsung-internet{scroll-behavior:auto}
+html.samsung-internet body,
+html.samsung-internet .landing-shell,
+html.samsung-internet .landing-shell main,
+html.samsung-internet .landing-shell section,
+html.samsung-internet .landing-shell article,
+html.samsung-internet .landing-shell header,
+html.samsung-internet .landing-shell footer{
+  transform:none!important;
+  filter:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  perspective:none!important;
+  isolation:auto!important;
+  contain:none!important;
+  will-change:auto!important;
+  backface-visibility:visible!important;
+  -webkit-backface-visibility:visible!important;
+}
+
+html.samsung-internet .landing-shell,
+html.samsung-internet .landing-shell main{
+  overflow:visible!important;
+  clip-path:none!important;
+  mask:none!important;
+  -webkit-mask:none!important;
+}
+
+html.samsung-internet .premium-nav{
+  position:relative!important;
+  top:auto!important;
+  background:var(--sand)!important;
+}
+
+html.samsung-internet .landing-shell *,
+html.samsung-internet .landing-shell *::before,
+html.samsung-internet .landing-shell *::after{
+  animation:none!important;
+  transition:none!important;
+  transform:none!important;
+  filter:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  will-change:auto!important;
+}
+
+html.samsung-internet .hero-stage::before,
+html.samsung-internet .journey-board::before{
+  display:none!important;
+}
+
+html.samsung-internet .journey-board,
+html.samsung-internet .starter-task-card,
+html.samsung-internet .outcome-card,
+html.samsung-internet .business-value,
+html.samsung-internet .comparison-muted,
+html.samsung-internet .comparison-nala,
+html.samsung-internet .simulation-sample,
+html.samsung-internet .passport-strip{
+  box-shadow:none!important;
+  background-image:none!important;
+  background-attachment:scroll!important;
+}
+
+html.samsung-internet .journey-board,
+html.samsung-internet .starter-task-card,
+html.samsung-internet .outcome-card,
+html.samsung-internet .business-value>div,
+html.samsung-internet .comparison-muted,
+html.samsung-internet .comparison-nala,
+html.samsung-internet .bridge-side,
+html.samsung-internet .simulation-sample,
+html.samsung-internet .passport-strip{
+  position:relative!important;
+  z-index:auto!important;
+  opacity:1!important;
+  mix-blend-mode:normal!important;
+  background-clip:border-box!important;
+}
+
+html.samsung-internet svg{
+  overflow:visible!important;
+  contain:none!important;
+}
+
+@media(max-width:900px){
+  html.samsung-internet .starter-task-grid,
+  html.samsung-internet .outcome-stack,
+  html.samsung-internet .business-value,
+  html.samsung-internet .comparison-grid,
+  html.samsung-internet .bridge-visual,
+  html.samsung-internet .steps-list{
+    display:block!important;
+  }
+
+  html.samsung-internet .starter-task-card,
+  html.samsung-internet .outcome-card,
+  html.samsung-internet .business-value>div,
+  html.samsung-internet .comparison-muted,
+  html.samsung-internet .comparison-nala,
+  html.samsung-internet .bridge-side,
+  html.samsung-internet .bridge-centre,
+  html.samsung-internet .step-row{
+    margin-bottom:14px!important;
+  }
+}
