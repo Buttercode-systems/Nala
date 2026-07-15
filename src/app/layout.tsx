@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import {AuthActionGuard} from "@/components/auth-action-guard";
 import "./globals.css";
 import "./hardening.css";
 import "./hero-card-fix.css";
@@ -32,5 +33,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return <html lang="en"><body>{children}</body></html>;
+  return <html lang="en"><body><AuthActionGuard/>{children}</body></html>;
 }
