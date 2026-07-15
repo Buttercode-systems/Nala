@@ -1,6 +1,6 @@
 import {createServerClient} from "@supabase/ssr";
 import {cookies} from "next/headers";
-import {NALA_SUPABASE_PUBLISHABLE_KEY,NALA_SUPABASE_URL} from "@/lib/market-data";
+import {NALA_SUPABASE_PUBLISHABLE_KEY,NALA_SUPABASE_URL} from "@/lib/supabase/config";
 
 export async function createServerSupabaseClient(){
  const cookieStore=await cookies();
