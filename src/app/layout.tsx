@@ -5,6 +5,7 @@ import "./hero-card-fix.css";
 import "./simulations.css";
 import "./workspace-refinements.css";
 import "./demo-controls.css";
+import "./progression.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nala-sa.vercel.app"),
