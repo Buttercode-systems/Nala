@@ -2,6 +2,8 @@ import {unstable_cache} from "next/cache";
 import {createClient} from "@supabase/supabase-js";
 import {NALA_SUPABASE_PUBLISHABLE_KEY,NALA_SUPABASE_URL} from "@/lib/supabase/config";
 
+export {NALA_SUPABASE_PUBLISHABLE_KEY,NALA_SUPABASE_URL} from "@/lib/supabase/config";
+
 export type MarketHealth={id:string;slug:string;name:string;geography:string;verticals:string[];status:string;worker_capacity:number;active_worker_count:number;funded_open_task_count:number;funded_tasks_per_active_worker:number|null;health_band:string;last_reviewed_at:string|null};
 export type TaskProduct={id:string;slug:string;title:string;category:string;verticals:string[];status:string;outcome:string;source_inputs:string[];completion_checklist:string[];evidence_requirements:string[];prohibited_information:string[];readiness_simulation_id:string|null;expected_active_minutes:number;expected_revision_minutes:number;minimum_worker_pay_cents:number;revision_limit:number;remote_capable:boolean};
 
