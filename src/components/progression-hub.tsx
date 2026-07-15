@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import {useEffect,useMemo,useState} from "react";
-import {ArrowLeft,ArrowRight,BadgeCheck,BriefcaseBusiness,CheckCircle2,CircleDollarSign,Download,Lightbulb,Signal,Target} from "lucide-react";
+import {ArrowLeft,ArrowRight,BadgeCheck,CheckCircle2,CircleDollarSign,Download,Lightbulb,Signal,Target} from "lucide-react";
 import {DEFAULT_GOAL,nextStep,passedSimulations,rankedOpenTasks,readProgressState,strongestCategories,uniqueSkills,verifiedTasks,type ProgressState} from "@/lib/progression";
 
 export function ProgressionHub(){
@@ -25,10 +25,10 @@ export function ProgressionHub(){
   if(enabled&&"serviceWorker" in navigator)await navigator.serviceWorker.register("/nala-low-data-sw.js");
   if(!enabled&&"serviceWorker" in navigator){const registrations=await navigator.serviceWorker.getRegistrations();await Promise.all(registrations.filter(item=>item.active?.scriptURL.includes("nala-low-data-sw.js")).map(item=>item.unregister()))}
  }
- if(!state)return <main className="progression-page"><div className="progression-shell"><Link href="/worker" className="progression-back"><ArrowLeft size={16}/>Back to workspace</Link><section className="progression-empty"><h1>No worker record yet</h1><p>Load the worker demo or complete activity in the workspace first. This module reads the same local record without changing the task lifecycle.</p></section></div></main>;
+ if(!state)return <main className="progression-page"><div className="progression-shell"><Link href="/worker" className="progression-back"><ArrowLeft size={16}/>Back to workspace</Link><section className="progression-empty"><h1>Your next step starts with evidence</h1><p>Load the worker demo or complete activity in the workspace first. Nala will use the same verified work record to guide your next move.</p></section></div></main>;
  const goalPercent=Math.min(100,Math.round((state.earnings/Math.max(goal.target,1))*100));
  return <main className="progression-page"><div className="progression-shell">
-  <div className="progression-top"><Link href="/worker" className="progression-back"><ArrowLeft size={16}/>Back to workspace</Link><span className="progression-label">Optional progression module</span></div>
+  <div className="progression-top"><Link href="/worker" className="progression-back"><ArrowLeft size={16}/>Back to workspace</Link><span className="progression-label">Nala progression</span></div>
   <header className="progression-hero"><div><p className="progression-eyebrow">Your evidence. Your next step.</p><h1>Progress beyond the first task.</h1><p>Nala uses verified work and passed simulations to explain what you have demonstrated, what to practise, and which suitable task to consider next.</p></div><div className="progression-score"><small>Verified evidence</small><strong>{verified.length}</strong><span>{passedSimulations(state)} simulations passed</span></div></header>
 
   <section className="progression-grid">
@@ -45,8 +45,8 @@ export function ProgressionHub(){
    <article className="progression-card"><div className="progression-icon"><Download size={18}/></div><p className="progression-kicker">Portable proof</p><h2>Export your Work Passport</h2><p>Create a print-ready, worker-controlled summary containing verified tasks and approved evidence only.</p><Link className="progression-action" href="/worker/passport-export">Open export <ArrowRight size={15}/></Link></article>
   </section>
 
-  <section className="progression-card progression-low-data"><div><div className="progression-icon"><Signal size={18}/></div><p className="progression-kicker">Low-data resilience</p><h2>Optional cached reading mode</h2><p>Cache the worker hub, previously opened pages and static assets. Acceptance, submission, verification and payment actions remain online-only.</p></div><button onClick={toggleLowData} className={lowData?"enabled":""}>{lowData?<><CheckCircle2 size={16}/>Enabled</>:"Enable low-data mode"}</button></section>
+  <section className="progression-card progression-low-data"><div><div className="progression-icon"><Signal size={18}/></div><p className="progression-kicker">Low-data resilience</p><h2>Low-data reading mode</h2><p>Cache the worker hub, previously opened pages and static assets. Acceptance, submission, verification and payment actions remain online-only.</p></div><button onClick={toggleLowData} className={lowData?"enabled":""}>{lowData?<><CheckCircle2 size={16}/>Enabled</>:"Enable low-data mode"}</button></section>
 
-  <section className="progression-boundary"><BadgeCheck size={18}/><p><strong>Safety boundary:</strong> This module is advisory and additive. It does not publish tasks, approve work, release payments, infer qualifications, or alter existing task states.</p></section>
+  <section className="progression-boundary"><BadgeCheck size={18}/><p><strong>How Nala protects your journey:</strong> Recommendations are advisory and explainable. Nala does not publish tasks, approve work, release payments, infer qualifications, or alter task states without the existing verified workflow.</p></section>
  </div></main>
 }
