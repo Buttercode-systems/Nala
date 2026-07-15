@@ -1,0 +1,56 @@
+/* Core worker progression navigation. Keeps the approved floating-pill language while treating progression as a permanent product pathway. */
+.progression-dock{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:55;
+  display:flex;
+  align-items:stretch;
+  gap:8px;
+}
+.progression-dock .progression-launcher{
+  position:static;
+  min-height:48px;
+  padding:9px 14px;
+  box-shadow:0 12px 28px rgba(18,33,26,.18);
+}
+.progression-dock .progression-launcher span{
+  display:flex;
+  flex-direction:column;
+  line-height:1.05;
+}
+.progression-dock .progression-launcher small{
+  margin-bottom:4px;
+  font-size:7px;
+  font-weight:950;
+  letter-spacing:.12em;
+  opacity:.72;
+}
+.progression-launcher-primary{
+  background:#dff09f!important;
+  color:#1d513b!important;
+}
+.progression-launcher-secondary{
+  background:#12211a!important;
+  color:#fff!important;
+}
+@media(max-width:760px){
+  .progression-dock{
+    right:12px;
+    bottom:12px;
+    left:12px;
+    justify-content:flex-end;
+    gap:6px;
+  }
+  .progression-dock .progression-launcher{
+    min-height:44px;
+    padding:8px 11px;
+    font-size:10px;
+  }
+  .progression-dock .progression-launcher small{font-size:6px}
+}
+@media(max-width:390px){
+  .progression-dock .progression-launcher-secondary span{display:none}
+  .progression-dock .progression-launcher-secondary{width:44px;justify-content:center;padding:0}
+}
+@media print{.progression-dock{display:none!important}}
