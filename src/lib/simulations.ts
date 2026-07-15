@@ -1,127 +1,72 @@
-export type SimulationOption={id:string;label:string;score:number;feedback:string};
-export type SimulationStep={id:string;prompt:string;context?:string;options:SimulationOption[]};
-export type Simulation={id:string;title:string;category:string;description:string;skills:string[];passMark:number;steps:SimulationStep[]};
+export type ChoiceOption={id:string;label:string;score:number;feedback:string};
+export type ChoiceActivity={type:"choice";id:string;prompt:string;context?:string;options:ChoiceOption[]};
+export type ClassifyActivity={type:"classify";id:string;prompt:string;records:{id:string;label:string}[];categories:string[];answers:Record<string,string>;feedback:string};
+export type SequenceActivity={type:"sequence";id:string;prompt:string;items:{id:string;label:string}[];correctOrder:string[];feedback:string};
+export type InspectActivity={type:"inspect";id:string;prompt:string;items:{id:string;label:string}[];correctIds:string[];feedback:string};
+export type ComposeActivity={type:"compose";id:string;prompt:string;brief:string;required:string[];forbidden:string[];minimumLength:number;feedback:string};
+export type SimulationActivity=ChoiceActivity|ClassifyActivity|SequenceActivity|InspectActivity|ComposeActivity;
+export type Simulation={id:string;title:string;category:string;description:string;skills:string[];passMark:number;activities:SimulationActivity[]};
 
 export const SIMULATIONS:Simulation[]=[
- {id:"appointment-confirmation",title:"Appointment confirmation",category:"Customer support",description:"Practise clear, respectful appointment communication and correct escalation.",skills:["Customer communication","Accuracy","Professional judgement"],passMark:75,steps:[
-  {id:"opening",prompt:"A customer has not confirmed tomorrow's 10:00 booking. What is the best first message?",options:[
-   {id:"a",label:"Hi Naledi, are you still able to attend tomorrow at 10:00? Please reply YES to confirm or let us know if you need to reschedule.",score:25,feedback:"Correct. It is clear, polite and gives the customer an easy next step."},
-   {id:"b",label:"Are you coming tomorrow?",score:8,feedback:"Too abrupt and missing the appointment time and rescheduling option."},
-   {id:"c",label:"Your appointment will be cancelled if you do not reply now.",score:0,feedback:"This is unnecessarily threatening and may damage the customer relationship."}]},
-  {id:"uncertain",prompt:"The customer replies: “I might be late. Can you move me?” What should you do?",options:[
-   {id:"a",label:"Promise a new time immediately.",score:4,feedback:"Do not promise availability you cannot verify."},
-   {id:"b",label:"Acknowledge the request, record it, and flag it for the owner to confirm the new time.",score:25,feedback:"Correct. You stay helpful without making an unauthorised promise."},
-   {id:"c",label:"Ignore the message because it is not a YES or NO.",score:0,feedback:"The request needs to be recorded and escalated."}]},
-  {id:"privacy",prompt:"The customer asks for another customer's phone number to swap appointments. What is the safest response?",options:[
-   {id:"a",label:"Share the number because both customers use the same salon.",score:0,feedback:"Never share another customer's personal information."},
-   {id:"b",label:"Explain that you cannot share customer details and offer to ask the owner about available alternatives.",score:25,feedback:"Correct. This protects privacy and still helps."},
-   {id:"c",label:"Send the number but delete the message afterwards.",score:0,feedback:"Deleting the message does not undo a privacy breach."}]},
-  {id:"record",prompt:"Three customers confirm, one asks to reschedule and one does not reply. What should your final record contain?",options:[
-   {id:"a",label:"Only the three confirmations.",score:8,feedback:"The owner also needs unresolved and rescheduling cases."},
-   {id:"b",label:"A complete list showing confirmed, reschedule requested, no response, and any owner action needed.",score:25,feedback:"Correct. A complete, structured record makes the work useful."},
-   {id:"c",label:"A message saying “done”.",score:0,feedback:"That does not provide enough evidence or detail."}]}
+ {id:"appointment-confirmation",title:"Appointment confirmation shift",category:"Customer support",description:"Work through a realistic salon confirmation list, handle customer replies and prepare a usable handover.",skills:["Customer communication","Booking accuracy","Escalation","Privacy"],passMark:80,activities:[
+  {type:"inspect",id:"booking-check",prompt:"Before contacting anyone, select every record that needs owner attention.",items:[{id:"a",label:"Naledi — 10:00 — valid number"},{id:"b",label:"Ayanda — 10:00 — same stylist as Naledi"},{id:"c",label:"Palesa — 11:30 — phone number missing"},{id:"d",label:"Zinhle — 13:00 — confirmed yesterday"}],correctIds:["b","c"],feedback:"A double-booking and missing contact detail must be flagged before messages are sent."},
+  {type:"compose",id:"confirmation-message",prompt:"Write the confirmation message for Naledi.",brief:"Include the business name, date/time, a clear confirmation action and a rescheduling option. Do not threaten cancellation.",required:["tomorrow","10:00","confirm","reschedule"],forbidden:["cancelled","blacklist","immediately"],minimumLength:55,feedback:"A strong message is specific, polite and gives the customer a safe next step."},
+  {type:"classify",id:"reply-log",prompt:"Classify each customer reply for the booking log.",records:[{id:"1",label:"YES, I will be there."},{id:"2",label:"Can I come at 12 instead?"},{id:"3",label:"No reply after the approved follow-up."},{id:"4",label:"Who else is booked with this stylist?"}],categories:["Confirmed","Reschedule requested","No response","Privacy/escalation"],answers:{"1":"Confirmed","2":"Reschedule requested","3":"No response","4":"Privacy/escalation"},feedback:"Every reply must become a clear status so the owner knows what action remains."},
+  {type:"choice",id:"late-customer",prompt:"A customer says they may arrive 25 minutes late. What do you do?",options:[{id:"a",label:"Guarantee the appointment will still happen.",score:0,feedback:"You cannot promise capacity you have not checked."},{id:"b",label:"Record the delay, acknowledge the message and ask the owner to confirm whether the slot can still work.",score:100,feedback:"Correct. You remain helpful without exceeding authority."},{id:"c",label:"Tell the customer not to come.",score:0,feedback:"That decision belongs to the business."}]},
+  {type:"sequence",id:"handover-order",prompt:"Build the end-of-shift handover in the most useful order.",items:[{id:"summary",label:"Give totals by confirmed, reschedule, no response and escalated"},{id:"exceptions",label:"List conflicts and customer questions needing owner action"},{id:"records",label:"Attach the completed customer-level status log"},{id:"quality",label:"Confirm all assigned customers were checked"}],correctOrder:["quality","summary","exceptions","records"],feedback:"A good handover first confirms completeness, then summarises outcomes, highlights exceptions and supplies the detailed record."}
  ]},
- {id:"quote-follow-up",title:"Quotation follow-up",category:"Sales administration",description:"Practise professional follow-up without pressure or false promises.",skills:["Professional writing","Sales support","Escalation"],passMark:75,steps:[
-  {id:"tone",prompt:"A quotation was sent five days ago. Which follow-up is best?",options:[
-   {id:"a",label:"Hi Mr Dlamini, I am following up on quotation Q-104. Please let us know if you have any questions or would like us to clarify anything.",score:25,feedback:"Correct. It is specific, professional and helpful."},
-   {id:"b",label:"Why have you not accepted our quote?",score:0,feedback:"This sounds confrontational."},
-   {id:"c",label:"Last chance before the price doubles.",score:0,feedback:"Never invent urgency or pricing changes."}]},
-  {id:"discount",prompt:"The customer asks for a 20% discount. What should you do?",options:[
-   {id:"a",label:"Approve it to close the deal.",score:0,feedback:"You do not have authority to change pricing."},
-   {id:"b",label:"Record the request and tell the customer the owner will review it.",score:25,feedback:"Correct. You capture the opportunity without overstepping."},
-   {id:"c",label:"Say discounts are never allowed.",score:6,feedback:"That may be untrue. Escalate instead."}]},
-  {id:"no",prompt:"The customer says they chose another supplier. What is the best response?",options:[
-   {id:"a",label:"Thank them for letting you know and record the outcome accurately.",score:25,feedback:"Correct. Stay professional and close the loop."},
-   {id:"b",label:"Keep messaging until they reconsider.",score:0,feedback:"That becomes unwanted pressure."},
-   {id:"c",label:"Delete them from all records.",score:4,feedback:"The business still needs an accurate outcome record."}]},
-  {id:"summary",prompt:"What should the business receive after eight follow-ups?",options:[
-   {id:"a",label:"A structured summary of contacted, interested, questions, declined and no-response customers.",score:25,feedback:"Correct. This gives the business actionable visibility."},
-   {id:"b",label:"Only screenshots of sent messages.",score:10,feedback:"Screenshots alone are harder to review and do not summarise outcomes."},
-   {id:"c",label:"A total message count only.",score:3,feedback:"The business needs customer-level outcomes."}]}
+ {id:"quote-follow-up",title:"Quotation follow-up desk",category:"Sales administration",description:"Prioritise a quotation list, write professional follow-ups and record commercial outcomes without pressure or false promises.",skills:["Sales support","Professional writing","Prioritisation","Authority boundaries"],passMark:80,activities:[
+  {type:"classify",id:"pipeline",prompt:"Classify each quotation before contacting the customer.",records:[{id:"q1",label:"Q-104 — sent 5 days ago — no reply"},{id:"q2",label:"Q-105 — customer asked for technical clarification"},{id:"q3",label:"Q-106 — accepted yesterday"},{id:"q4",label:"Q-107 — expired price validity"}],categories:["Follow up","Owner response required","Closed-won","Do not send / review first"],answers:{q1:"Follow up",q2:"Owner response required",q3:"Closed-won",q4:"Do not send / review first"},feedback:"Good follow-up starts with accurate pipeline status, not mass messaging."},
+  {type:"sequence",id:"priority",prompt:"Choose the safest work order.",items:[{id:"verify",label:"Verify quote status and validity"},{id:"questions",label:"Separate technical or pricing questions for the owner"},{id:"message",label:"Send approved follow-up messages"},{id:"record",label:"Record each outcome and next action"}],correctOrder:["verify","questions","message","record"],feedback:"Verification and authority checks come before customer contact."},
+  {type:"compose",id:"followup-copy",prompt:"Draft a follow-up for quotation Q-104.",brief:"Reference Q-104, offer help and ask for an update. Do not invent urgency, discounts or price changes.",required:["Q-104","questions","update"],forbidden:["last chance","double","discount guaranteed","today only"],minimumLength:65,feedback:"Professional sales support is specific and helpful, never manipulative."},
+  {type:"choice",id:"discount",prompt:"The customer asks for 20% off. What is the correct response?",options:[{id:"a",label:"Approve the discount to close the sale.",score:0,feedback:"You do not have pricing authority."},{id:"b",label:"Record the request and explain that the owner will review it.",score:100,feedback:"Correct. Capture the opportunity without making an unauthorised promise."},{id:"c",label:"Say the business never discounts.",score:20,feedback:"That may be untrue. Escalate instead."}]},
+  {type:"inspect",id:"handover",prompt:"Select everything the final sales handover must contain.",items:[{id:"contacted",label:"Who was contacted"},{id:"outcome",label:"Interested, declined, questions or no response"},{id:"next",label:"Next action and owner decisions required"},{id:"screens",label:"Only screenshots with no summary"},{id:"promise",label:"Discounts you personally promised"}],correctIds:["contacted","outcome","next"],feedback:"A useful handover creates an actionable pipeline, not a pile of screenshots or unauthorised commitments."}
  ]},
- {id:"invoice-reminders",title:"Invoice reminder preparation",category:"Finance administration",description:"Practise accurate, respectful reminders without misrepresenting authority.",skills:["Admin accuracy","Professional communication","Confidentiality"],passMark:75,steps:[
-  {id:"verify",prompt:"Before preparing a reminder, what must you verify first?",options:[
-   {id:"a",label:"Invoice number, customer, amount, due date and whether payment has already been received.",score:25,feedback:"Correct. Accuracy comes before contact."},
-   {id:"b",label:"Only the customer's name.",score:4,feedback:"That is not enough to prevent an incorrect reminder."},
-   {id:"c",label:"Nothing; send the same reminder to everyone.",score:0,feedback:"That risks contacting paid or incorrect customers."}]},
-  {id:"dispute",prompt:"A customer says the invoice is disputed. What should happen next?",options:[
-   {id:"a",label:"Demand payment anyway.",score:0,feedback:"A dispute must be escalated, not chased blindly."},
-   {id:"b",label:"Record the dispute details and flag it for the business owner.",score:25,feedback:"Correct. This preserves the issue and stops inappropriate follow-up."},
-   {id:"c",label:"Mark the invoice as paid.",score:0,feedback:"A dispute is not a payment."}]},
-  {id:"tone",prompt:"Which reminder tone is appropriate?",options:[
-   {id:"a",label:"A polite factual reminder that references the invoice and asks the customer to confirm payment status.",score:25,feedback:"Correct. It is clear without being aggressive."},
-   {id:"b",label:"Pay today or we will blacklist you.",score:0,feedback:"Do not make threats or legal claims."},
-   {id:"c",label:"Hey, you owe us money.",score:2,feedback:"This is too informal and vague."}]},
-  {id:"report",prompt:"What should the final handover show?",options:[
-   {id:"a",label:"Sent, paid, promised date, disputed, no response and owner action required.",score:25,feedback:"Correct. This creates a useful collections action list."},
-   {id:"b",label:"Only who replied.",score:8,feedback:"The business needs the full status of every assigned invoice."},
-   {id:"c",label:"Only the total outstanding amount.",score:5,feedback:"That does not explain what happened during the task."}]}
+ {id:"invoice-reminders",title:"Invoice reminder control room",category:"Finance administration",description:"Verify invoice facts, separate disputes from collections work and prepare accurate, respectful reminders.",skills:["Invoice accuracy","Confidentiality","Collections admin","Dispute escalation"],passMark:85,activities:[
+  {type:"inspect",id:"invoice-audit",prompt:"Select every invoice that must NOT receive a standard reminder yet.",items:[{id:"i1",label:"INV-201 — overdue 8 days — unpaid"},{id:"i2",label:"INV-202 — payment received this morning"},{id:"i3",label:"INV-203 — customer disputes quantity supplied"},{id:"i4",label:"INV-204 — due tomorrow"},{id:"i5",label:"INV-205 — customer promised payment Friday"}],correctIds:["i2","i3","i4","i5"],feedback:"Paid, disputed, not-yet-due and promise-to-pay records require different handling."},
+  {type:"classify",id:"response-status",prompt:"Classify each customer response.",records:[{id:"r1",label:"Paid EFT today; POP attached."},{id:"r2",label:"The amount is wrong."},{id:"r3",label:"I will pay on 28 July."},{id:"r4",label:"No response after approved reminder."}],categories:["Payment to verify","Dispute","Promise to pay","No response"],answers:{r1:"Payment to verify",r2:"Dispute",r3:"Promise to pay",r4:"No response"},feedback:"Collections records must distinguish payment evidence, disputes, promises and silence."},
+  {type:"compose",id:"reminder",prompt:"Prepare the reminder for INV-201.",brief:"Reference INV-201, the amount R2 450 and the overdue status. Ask for payment status or proof of payment. Do not threaten legal action or blacklisting.",required:["INV-201","R2 450","payment","proof"],forbidden:["blacklist","lawyer","court","final warning"],minimumLength:75,feedback:"A good reminder is factual, traceable and respectful."},
+  {type:"choice",id:"dispute",prompt:"A customer says the invoice includes work they did not approve. What happens next?",options:[{id:"a",label:"Continue demanding payment.",score:0,feedback:"A dispute must stop the standard chase workflow."},{id:"b",label:"Capture the dispute details, pause reminders and escalate to the owner.",score:100,feedback:"Correct. Preserve the facts and route the matter to someone with authority."},{id:"c",label:"Mark the invoice paid.",score:0,feedback:"A dispute is not payment."}]},
+  {type:"sequence",id:"collections-handover",prompt:"Order the collections handover workflow.",items:[{id:"reconcile",label:"Reconcile responses against the invoice list"},{id:"status",label:"Assign an accurate status to every invoice"},{id:"actions",label:"Highlight disputes, promises and owner actions"},{id:"totals",label:"Provide totals and the detailed action list"}],correctOrder:["reconcile","status","actions","totals"],feedback:"A reliable collections handover moves from reconciliation to status, exceptions and final reporting."}
  ]},
- {id:"spreadsheet-cleanup",title:"Spreadsheet cleanup",category:"Data administration",description:"Practise safe, consistent data cleaning and quality control.",skills:["Spreadsheet cleanup","Data accuracy","Quality checking"],passMark:75,steps:[
-  {id:"duplicate",prompt:"Two rows have the same phone number but slightly different names. What is the safest action?",options:[
-   {id:"a",label:"Delete one immediately.",score:4,feedback:"You need enough evidence before deleting a possible real record."},
-   {id:"b",label:"Flag them as possible duplicates and compare other fields before merging or deleting.",score:25,feedback:"Correct. This protects against accidental data loss."},
-   {id:"c",label:"Keep both without noting anything.",score:5,feedback:"Potential duplicates should be reviewed and recorded."}]},
-  {id:"format",prompt:"Phone numbers use several formats. What should you do?",options:[
-   {id:"a",label:"Apply one agreed format consistently while preserving the underlying number.",score:25,feedback:"Correct. Standardisation should not change the data meaning."},
-   {id:"b",label:"Remove all country codes.",score:5,feedback:"That may make some numbers unusable."},
-   {id:"c",label:"Leave every format unchanged.",score:4,feedback:"The task requires consistent, usable data."}]},
-  {id:"missing",prompt:"A required field is blank and you cannot infer the value. What should you do?",options:[
-   {id:"a",label:"Guess the most likely value.",score:0,feedback:"Never invent business data."},
-   {id:"b",label:"Leave it blank, flag it clearly and include it in the exception summary.",score:25,feedback:"Correct. This keeps the dataset honest."},
-   {id:"c",label:"Delete the whole row.",score:2,feedback:"A missing field does not automatically make the full record invalid."}]},
-  {id:"quality",prompt:"What final quality check is strongest?",options:[
-   {id:"a",label:"Review totals, sample changed rows, confirm formatting rules and provide a change summary.",score:25,feedback:"Correct. This gives confidence that the cleanup is complete."},
-   {id:"b",label:"Check only the first row.",score:2,feedback:"One row cannot validate the full file."},
-   {id:"c",label:"Rename the file to FINAL.",score:0,feedback:"A filename is not a quality check."}]}
+ {id:"spreadsheet-cleanup",title:"Customer data cleanup lab",category:"Data administration",description:"Inspect messy customer records, make safe corrections and produce a quality-controlled change log.",skills:["Spreadsheet cleanup","Data accuracy","Duplicate control","Quality assurance"],passMark:85,activities:[
+  {type:"inspect",id:"row-errors",prompt:"Select every issue in this record: “Lebo M. | 082 555 0199 | lebo@email | Johannesburg | duplicate of row 18”.",items:[{id:"email",label:"Email format is invalid"},{id:"phone",label:"Phone number requires agreed standard formatting"},{id:"duplicate",label:"Possible duplicate needs review"},{id:"city",label:"Johannesburg is automatically incorrect"}],correctIds:["email","phone","duplicate"],feedback:"Identify real quality issues without inventing problems."},
+  {type:"classify",id:"cleanup-actions",prompt:"Choose the safest action for each row.",records:[{id:"d1",label:"Same phone and email, spelling differs slightly"},{id:"d2",label:"Blank province, all other fields valid"},{id:"d3",label:"Phone contains letters"},{id:"d4",label:"Valid complete record"}],categories:["Flag possible duplicate","Keep and flag missing field","Flag invalid value","No change"],answers:{d1:"Flag possible duplicate",d2:"Keep and flag missing field",d3:"Flag invalid value",d4:"No change"},feedback:"Safe cleanup protects data and makes uncertainty visible."},
+  {type:"sequence",id:"cleanup-process",prompt:"Order the cleanup process.",items:[{id:"backup",label:"Preserve the original file"},{id:"rules",label:"Confirm formatting and duplicate rules"},{id:"clean",label:"Apply approved corrections"},{id:"qa",label:"Sample changes and reconcile row totals"},{id:"log",label:"Produce a change and exception log"}],correctOrder:["backup","rules","clean","qa","log"],feedback:"Reversible, rule-based work comes before editing, QA and handover."},
+  {type:"compose",id:"change-note",prompt:"Write the change-log note for the completed file.",brief:"State how many rows were reviewed, what was standardised, duplicates flagged and unresolved exceptions. Include: 84 rows, 11 possible duplicates, 7 invalid emails.",required:["84","11","7","duplicates","emails"],forbidden:["all perfect","deleted everything"],minimumLength:70,feedback:"The change log must let another person understand exactly what changed and what still needs review."},
+  {type:"choice",id:"unknown",prompt:"A missing ID number cannot be inferred. What should you do?",options:[{id:"a",label:"Guess from another record.",score:0,feedback:"Never invent personal data."},{id:"b",label:"Leave it blank, flag it and include it in the exception log.",score:100,feedback:"Correct. Honest uncertainty is safer than fabricated data."},{id:"c",label:"Delete the customer.",score:0,feedback:"One missing field does not justify deleting a record."}]}
  ]},
- {id:"social-content",title:"Social content preparation",category:"Digital marketing",description:"Practise brand-safe content preparation, accuracy and approval boundaries.",skills:["Content preparation","Brand accuracy","Digital judgement"],passMark:75,steps:[
-  {id:"claim",prompt:"The owner asks for a post saying the product is “guaranteed to cure acne,” but no evidence is provided. What should you do?",options:[
-   {id:"a",label:"Use the claim because the owner requested it.",score:0,feedback:"Unsupported health claims are unsafe and can harm customers and the business."},
-   {id:"b",label:"Flag the claim, avoid publishing it and suggest factual product wording for owner approval.",score:25,feedback:"Correct. You protect the business while staying helpful."},
-   {id:"c",label:"Make the claim even stronger for engagement.",score:0,feedback:"Never amplify an unsupported claim."}]},
-  {id:"image",prompt:"A customer photo appears in the business folder with no consent note. What is the safest action?",options:[
-   {id:"a",label:"Use it because it is already in the folder.",score:0,feedback:"Storage location is not proof of publishing consent."},
-   {id:"b",label:"Do not use it until the owner confirms permission.",score:25,feedback:"Correct. Consent must be clear."},
-   {id:"c",label:"Crop the face and publish it.",score:5,feedback:"Cropping may not remove identifying details or solve consent."}]},
-  {id:"brand",prompt:"Which draft best follows a supplied brand guide?",options:[
-   {id:"a",label:"One using the approved tone, spelling, offer details and call to action.",score:25,feedback:"Correct. Brand consistency is part of quality."},
-   {id:"b",label:"One with trendy slang that changes the business voice.",score:5,feedback:"Trends should not override the approved brand voice."},
-   {id:"c",label:"One that invents a discount to increase clicks.",score:0,feedback:"Never invent an offer."}]},
-  {id:"handover",prompt:"What should be included in the final handover?",options:[
-   {id:"a",label:"Draft copy, asset references, proposed schedule, approval notes and anything needing owner confirmation.",score:25,feedback:"Correct. This makes review and publishing straightforward."},
-   {id:"b",label:"Only a caption pasted into chat.",score:7,feedback:"The owner needs the full prepared package and approval context."},
-   {id:"c",label:"Publish everything without review.",score:0,feedback:"Preparation work should respect the agreed approval boundary."}]}
+ {id:"social-content",title:"Brand-safe content studio",category:"Digital marketing",description:"Turn a real brief into review-ready content while protecting consent, brand rules and factual accuracy.",skills:["Content preparation","Brand accuracy","Consent","Claims checking"],passMark:85,activities:[
+  {type:"inspect",id:"brief-risks",prompt:"Select every item that requires clarification before drafting.",items:[{id:"claim",label:"“Guaranteed to cure acne” with no evidence"},{id:"photo",label:"Customer before-and-after photo with no consent record"},{id:"price",label:"Approved price list dated this week"},{id:"offer",label:"“20% off” mentioned verbally but not in the written brief"}],correctIds:["claim","photo","offer"],feedback:"Claims, consent and unconfirmed offers must be resolved before content is prepared."},
+  {type:"classify",id:"asset-triage",prompt:"Classify each asset for the content pack.",records:[{id:"a1",label:"Approved product photo"},{id:"a2",label:"Customer testimonial with signed consent"},{id:"a3",label:"Old logo from 2022"},{id:"a4",label:"Competitor image found online"}],categories:["Use","Use with attribution/approval note","Replace with current asset","Do not use"],answers:{a1:"Use",a2:"Use with attribution/approval note",a3:"Replace with current asset",a4:"Do not use"},feedback:"Asset handling is part of professional content work, not decoration."},
+  {type:"compose",id:"caption",prompt:"Draft the review-ready caption.",brief:"Product: Ubuntu Gentle Cleanser. Tone: warm and factual. Mention gentle daily cleansing and invite customers to ask about suitability. Do not promise medical results or invent discounts.",required:["Ubuntu Gentle Cleanser","gentle","daily","suitability"],forbidden:["cure","guaranteed","20% off","doctor approved"],minimumLength:90,feedback:"Strong content follows the brief, remains factual and respects approval boundaries."},
+  {type:"sequence",id:"approval-flow",prompt:"Order the content workflow.",items:[{id:"brief",label:"Confirm brief, brand guide and approved assets"},{id:"draft",label:"Prepare copy and asset references"},{id:"check",label:"Check claims, consent, spelling and offer details"},{id:"approval",label:"Send the review pack to the owner"},{id:"publish",label:"Publish only after approval"}],correctOrder:["brief","draft","check","approval","publish"],feedback:"Preparation, quality control and approval happen before publishing."},
+  {type:"choice",id:"owner-pressure",prompt:"The owner asks you to publish immediately without checking consent. What do you do?",options:[{id:"a",label:"Publish because the owner asked.",score:0,feedback:"Urgency does not remove consent obligations."},{id:"b",label:"Explain the risk, hold the image and request confirmation of consent.",score:100,feedback:"Correct. Protect the customer and the business."},{id:"c",label:"Crop the face and publish.",score:20,feedback:"Cropping may not remove identifying information or solve consent."}]}
  ]},
- {id:"reception-bookings",title:"Reception and booking support",category:"Reception",description:"Practise handling bookings, uncertainty, boundaries and customer care.",skills:["Reception support","Scheduling","Customer care"],passMark:75,steps:[
-  {id:"double",prompt:"Two customers appear booked for the same slot. What should you do?",options:[
-   {id:"a",label:"Cancel one at random.",score:0,feedback:"Never make an arbitrary decision affecting a customer."},
-   {id:"b",label:"Flag the conflict immediately and ask the owner which booking should be moved.",score:25,feedback:"Correct. You identify the issue without exceeding authority."},
-   {id:"c",label:"Leave it and hope one does not arrive.",score:0,feedback:"The conflict must be resolved before service time."}]},
-  {id:"late",prompt:"A customer says they will be 25 minutes late. What is the right response?",options:[
-   {id:"a",label:"Guarantee they will still be served.",score:3,feedback:"You cannot guarantee this without checking capacity."},
-   {id:"b",label:"Acknowledge, record the delay and confirm that the owner will advise whether the booking can still be accommodated.",score:25,feedback:"Correct. This is helpful and accurate."},
-   {id:"c",label:"Tell them not to come.",score:0,feedback:"That decision belongs to the business."}]},
-  {id:"complaint",prompt:"A frustrated customer complains about a previous service. What should you do first?",options:[
-   {id:"a",label:"Argue that the business is not at fault.",score:0,feedback:"Do not become defensive or dismissive."},
-   {id:"b",label:"Listen, capture the facts, acknowledge the concern and escalate it to the owner.",score:25,feedback:"Correct. This supports the customer and preserves accurate information."},
-   {id:"c",label:"Offer a full refund immediately.",score:4,feedback:"You may not have authority to approve refunds."}]},
-  {id:"close",prompt:"At the end of the shift, what should the handover include?",options:[
-   {id:"a",label:"Confirmed bookings, changes, no responses, conflicts, complaints and owner actions required.",score:25,feedback:"Correct. A complete handover prevents dropped issues."},
-   {id:"b",label:"Only the total number of bookings.",score:6,feedback:"The owner needs details about exceptions and actions."},
-   {id:"c",label:"Nothing if the day felt quiet.",score:0,feedback:"A handover should still confirm the status of assigned work."}]}
+ {id:"reception-bookings",title:"Reception pressure shift",category:"Reception",description:"Manage a busy booking period with conflicts, complaints, late arrivals and a complete handover.",skills:["Reception support","Scheduling","Customer care","Pressure judgement"],passMark:85,activities:[
+  {type:"classify",id:"desk-triage",prompt:"Triage the incoming desk queue.",records:[{id:"p1",label:"Customer waiting to check in"},{id:"p2",label:"Double-booking discovered for the next hour"},{id:"p3",label:"Supplier asks for the owner's private number"},{id:"p4",label:"Customer wants to move next month's booking"}],categories:["Serve now","Urgent escalation","Privacy boundary","Schedule normally"],answers:{p1:"Serve now",p2:"Urgent escalation",p3:"Privacy boundary",p4:"Schedule normally"},feedback:"Reception work depends on correct urgency and boundaries, not first-come-first-served alone."},
+  {type:"choice",id:"complaint",prompt:"A frustrated customer says yesterday's service was poor. What is the best first response?",options:[{id:"a",label:"Defend the business immediately.",score:0,feedback:"Defensiveness makes the situation worse."},{id:"b",label:"Listen, acknowledge the concern, capture facts and escalate to the owner.",score:100,feedback:"Correct. Support the customer without promising an outcome you cannot authorise."},{id:"c",label:"Promise a full refund.",score:20,feedback:"You may not have refund authority."}]},
+  {type:"sequence",id:"double-booking",prompt:"Resolve the double-booking safely.",items:[{id:"verify",label:"Verify both booking records and times"},{id:"capacity",label:"Check available alternatives without changing anything yet"},{id:"owner",label:"Escalate the conflict and options to the owner"},{id:"contact",label:"Contact the affected customer using the approved decision"},{id:"record",label:"Update the booking log and handover note"}],correctOrder:["verify","capacity","owner","contact","record"],feedback:"Verify, prepare options, obtain authority, communicate and record."},
+  {type:"compose",id:"late-response",prompt:"Write the response to a customer who will be 25 minutes late.",brief:"Acknowledge the delay, avoid guaranteeing service, and explain that you will confirm with the team.",required:["25","confirm","team"],forbidden:["guarantee","do not come","cancelled"],minimumLength:55,feedback:"Reception communication should be calm, accurate and within authority."},
+  {type:"inspect",id:"handover",prompt:"Select every item that belongs in the shift handover.",items:[{id:"bookings",label:"Confirmed bookings and changes"},{id:"conflicts",label:"Unresolved conflicts"},{id:"complaints",label:"Complaints and promised follow-up"},{id:"privacy",label:"Private customer gossip"},{id:"actions",label:"Owner actions required"}],correctIds:["bookings","conflicts","complaints","actions"],feedback:"A handover preserves operational facts and actions, never gossip."}
  ]}
 ];
 
 export function getSimulationForCategory(category:string){
  const exact=SIMULATIONS.find(s=>s.category.toLowerCase()===category.toLowerCase());
- if(exact)return exact;
- const normalized=category.toLowerCase();
- if(normalized.includes("customer"))return SIMULATIONS[0];
- if(normalized.includes("sales"))return SIMULATIONS[1];
- if(normalized.includes("finance")||normalized.includes("invoice"))return SIMULATIONS[2];
- if(normalized.includes("data")||normalized.includes("spreadsheet"))return SIMULATIONS[3];
- if(normalized.includes("digital")||normalized.includes("marketing")||normalized.includes("social"))return SIMULATIONS[4];
- if(normalized.includes("reception")||normalized.includes("booking"))return SIMULATIONS[5];
- return SIMULATIONS[0];
+ if(exact)return exact;const value=category.toLowerCase();
+ if(value.includes("customer"))return SIMULATIONS[0];if(value.includes("sales")||value.includes("quote"))return SIMULATIONS[1];if(value.includes("finance")||value.includes("invoice"))return SIMULATIONS[2];if(value.includes("data")||value.includes("spreadsheet"))return SIMULATIONS[3];if(value.includes("marketing")||value.includes("social"))return SIMULATIONS[4];if(value.includes("reception")||value.includes("booking"))return SIMULATIONS[5];return undefined;
 }
+
+export function auditSimulationLibrary(){
+ const errors:string[]=[];const signatures=new Set<string>();
+ for(const simulation of SIMULATIONS){
+  if(simulation.activities.length<5)errors.push(`${simulation.id}: fewer than five activities`);
+  const types=new Set(simulation.activities.map(a=>a.type));if(types.size<4)errors.push(`${simulation.id}: insufficient mechanic variety`);
+  if(simulation.passMark<80)errors.push(`${simulation.id}: pass mark too low`);
+  const signature=simulation.activities.map(a=>a.type).join(",");if(signatures.has(signature))errors.push(`${simulation.id}: duplicate activity sequence`);signatures.add(signature);
+  const ids=new Set<string>();for(const activity of simulation.activities){if(ids.has(activity.id))errors.push(`${simulation.id}: duplicate activity id ${activity.id}`);ids.add(activity.id)}
+ }
+ return {ok:errors.length===0,errors};
+}
+const audit=auditSimulationLibrary();if(!audit.ok)throw new Error(`Invalid simulation library: ${audit.errors.join("; ")}`);
