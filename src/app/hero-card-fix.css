@@ -1,12 +1,13 @@
-/* Keep the readable journey card aligned; reserve the playful angle for the decorative layer. */
+/* Treat the desktop journey visual as one physical card: panel, text and controls share the same rotation. */
 @media (min-width: 901px) {
   .journey-board {
-    transform: none;
+    transform: rotate(-2deg);
+    transform-origin: center;
   }
 
   .journey-board::before {
     inset: 14px -20px -20px 16px;
-    transform: rotate(-3.2deg);
+    transform: rotate(0.8deg);
     transform-origin: center;
   }
 }
