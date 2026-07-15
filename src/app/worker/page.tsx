@@ -1,12 +1,10 @@
 import Link from "next/link";
 import {BadgeCheck,Bell,Sparkles} from "lucide-react";
 import {WorkspaceEntry} from "@/components/workspace-entry";
-import {WorkerCorePrompt} from "@/components/worker-core-prompt";
 
 export default function WorkerPage(){
  return <>
   <WorkspaceEntry role="worker" initialView="dashboard"/>
-  <WorkerCorePrompt/>
   <nav className="progression-dock" aria-label="Worker progression">
    <Link href="/worker/availability" className="progression-launcher progression-launcher-secondary" aria-label="Open live availability" title="Open live availability">
     <Bell size={15}/><span><small>REAL MARKET STATUS</small>Availability</span>
