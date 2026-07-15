@@ -1,2 +1,2 @@
-import {NalaApp} from "@/components/nala-app";
-export default function BusinessPage(){return <NalaApp initialView="dashboard"/>}
+import {WorkspaceEntry} from "@/components/workspace-entry";
+export default function BusinessPage(){return <WorkspaceEntry role="business" initialView="dashboard"/>}
