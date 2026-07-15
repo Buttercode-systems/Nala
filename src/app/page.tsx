@@ -1,38 +1,117 @@
 import Link from "next/link";
-import {ArrowRight,BadgeCheck,BriefcaseBusiness,Building2,CircleDollarSign,Clock3,ShieldCheck,Sparkles,Star} from "lucide-react";
+import {ArrowRight, BadgeCheck, BriefcaseBusiness, Building2, Check, ChevronRight, CircleDollarSign, HeartHandshake, ShieldCheck, Sparkles, Star, UsersRound} from "lucide-react";
+import {Nav} from "@/components/nav";
 
-const tasks=[
- {category:"Customer support",title:"Confirm tomorrow’s salon appointments",business:"Lerato Beauty Studio",pay:"R100",time:"45–60 min",proof:"Customer communication",detail:"Contact 10 customers, record every reply and flag anything the owner must handle."},
- {category:"Sales administration",title:"Follow up on six open quotations",business:"Mandla Electrical",pay:"R150",time:"60–90 min",proof:"Professional writing",detail:"Prepare helpful follow-ups without inventing urgency, discounts or promises."},
- {category:"Data administration",title:"Clean a customer contact spreadsheet",business:"Mpho Catering",pay:"R120",time:"60 min",proof:"Data accuracy",detail:"Standardise contact details, flag possible duplicates and return a clear change log."}
-];
-const steps=[
- ["01","Tell us what you already do","A short, honest profile recognises practical and informal experience — not only formal employment."],
- ["02","See a suitable starting point","Nala shows work that matches your access, strengths and readiness rather than sending you into a crowded application queue."],
- ["03","Practise the specific work","Complete a job-specific readiness mission with realistic decisions, written work, feedback and a meaningful pass standard."],
- ["04","Accept clear, paid work","See payment, time, scope, device needs and expected evidence before you commit."],
- ["05","Do the work with guidance","Use a structured workbench, quality checks and clear escalation rules while completing the real task."],
- ["06","Turn the result into proof","The business verifies the work. Your readiness, quality and reliability become portable evidence in your Work Passport."]
-];
-const simulations=[
- {tag:"Customer support",title:"Appointment confirmation shift",copy:"Inspect booking conflicts, write a real confirmation message, classify replies and prepare a shift handover.",demo:["Spot a double-booking","Handle a late arrival","Log every customer outcome"]},
- {tag:"Data administration",title:"Customer data cleanup lab",copy:"Find record errors, choose safe cleanup actions, preserve the original file and produce a proper change log.",demo:["Identify invalid fields","Flag possible duplicates","Explain unresolved exceptions"]},
- {tag:"Finance administration",title:"Invoice reminder control room",copy:"Verify invoice facts, separate disputes from reminders and prepare accurate, respectful customer communication.",demo:["Audit before contact","Classify customer replies","Escalate a dispute safely"]}
+const workerSteps=[
+  ["01","Tell us what you can already do","Formal jobs are not the only experience that counts. Helping at a salon, selling products, managing a WhatsApp group or organising community work can all reveal useful skills."],
+  ["02","Practise before real work","Nala gives you a short, guided simulation so you can build confidence and the business can trust that you understand the task."],
+  ["03","Complete safe, paid work","You see the scope, payment, deadline and evidence requirements before accepting. Nala guides the process without hiding what is expected."],
+  ["04","Turn work into proof","The business verifies your quality, reliability and communication. That evidence grows your work passport and unlocks better opportunities."],
 ];
 
-export default function Home(){return <div className="landing-v2">
- <header className="v2-nav"><div className="v2-wrap v2-nav-inner"><Link href="/" className="v2-brand">nala<span>.</span></Link><nav className="v2-links" aria-label="Primary navigation"><a href="#work">Real work</a><a href="#journey">How it works</a><a href="#practice">Practice</a><a href="#business">For businesses</a><Link href="/worker" className="v2-nav-cta">Open Nala <ArrowRight size={15}/></Link></nav></div></header>
- <main>
-  <section className="v2-hero"><div className="v2-wrap v2-hero-grid"><div><div className="v2-kicker">Built for the first real opportunity</div><h1>Experience should not be the thing that keeps you from getting experience.</h1><p className="v2-hero-lede">Nala prepares young people for real starter tasks, guides the work from start to finish, and turns every approved result into proof they can carry forward.</p><div className="v2-actions"><Link href="/worker" className="v2-primary">Start building experience <ArrowRight size={18}/></Link><Link href="/business" className="v2-secondary">I run a business <Building2 size={17}/></Link></div><div className="v2-manifesto">Real work. Real proof. Real progress.</div></div>
-   <div className="v2-journey" aria-label="Sample Nala work journey"><div className="v2-person"><div className="v2-avatar">TM</div><div><strong>Thandi Mokoena</strong><p>22 · Matric · Strong with people</p></div><div className="v2-score"><Star size={13} fill="currentColor"/> 96%</div></div><div className="v2-task"><div className="v2-task-top"><div><small>Current starter task</small><h3>Confirm 10 salon appointments</h3><p>Lerato Beauty Studio · Remote</p></div><div className="v2-pay"><small>You earn</small><strong>R100</strong><span>45–60 min</span></div></div><div className="v2-progress"><span/><span/><span/><span/></div><div className="v2-proof"><div><span className="v2-micro">Readiness</span><strong>Simulation passed · 88%</strong></div><div><span className="v2-micro">This task proves</span><strong>Customer communication</strong></div></div></div></div>
-  </div></section>
-  <section className="v2-section" id="work"><div className="v2-wrap"><div className="v2-section-head"><div><div className="v2-kicker">Real starter work</div><h2 className="v2-section-title">Not another application queue. Work you can prepare for and complete.</h2></div><p className="v2-section-copy">Every task shows what it pays, how long it should take, what is expected and what evidence it can add to your work history.</p></div><div className="v2-task-grid">{tasks.map(task=><article className="v2-market-card" key={task.title}><div className="v2-market-top"><span className="v2-pill">{task.category}</span><strong>{task.pay}</strong></div><h3>{task.title}</h3><p><strong>{task.business}</strong></p><p>{task.detail}</p><div className="v2-meta"><span><Clock3 size={13}/> {task.time}</span><span><CircleDollarSign size={13}/> Payment shown</span></div><div className="v2-unlock"><Sparkles size={14}/> Readiness mission · {task.proof}</div></article>)}</div></div></section>
-  <section className="v2-section" id="journey"><div className="v2-wrap v2-story"><div><div className="v2-kicker">A complete first-work journey</div><h2>From what you already know to proof that speaks for you.</h2><p className="v2-story-intro">Nala does not ask a young person to pretend they already have a career. It creates a safe starting point and records what they prove along the way.</p></div><div className="v2-timeline">{steps.map(([n,title,copy])=><article className="v2-step" key={n}><span className="v2-step-num">{n}</span><div><h3>{title}</h3><p>{copy}</p></div></article>)}</div></div></section>
-  <section className="v2-section" id="practice"><div className="v2-wrap"><div className="v2-section-head"><div><div className="v2-kicker">Practise before real work</div><h2 className="v2-section-title">Train for the actual task — not a generic quiz.</h2></div><p className="v2-section-copy">Each work category has its own readiness mission, interaction types, coaching and pass standard. A worker must demonstrate understanding before task acceptance.</p></div><div className="v2-sim-grid">{simulations.map(sim=><article className="v2-sim-card" key={sim.title}><span className="v2-pill">{sim.tag}</span><h3>{sim.title}</h3><p>{sim.copy}</p><div className="v2-sim-demo"><strong>Inside this mission</strong>{sim.demo.map(item=><div className="v2-demo-row" key={item}><span className="v2-demo-dot"/>{item}</div>)}</div></article>)}</div><div className="v2-actions" style={{justifyContent:"center",marginTop:48}}><Link href="/worker" className="v2-secondary">Explore the practice library <ArrowRight size={17}/></Link></div></div></section>
-  <section className="v2-section"><div className="v2-wrap v2-passport"><div><div className="v2-kicker">Proof-of-Work Passport</div><h2>Do not just say you are reliable. Show what businesses verified.</h2><p className="v2-passport-copy">Every approved task and passed readiness mission becomes structured evidence: the work completed, skills demonstrated, business verification and reliability over time.</p><div className="v2-actions"><Link href="/passport" className="v2-primary">View the sample Passport <ArrowRight size={17}/></Link></div></div><div className="v2-passport-card"><div className="v2-passport-head"><div className="v2-avatar">TM</div><div><h3>Thandi Mokoena</h3><p>Proof-of-Work Passport</p></div><BadgeCheck size={28} color="#155d48" style={{marginLeft:"auto"}}/></div><div className="v2-passport-stats"><div><strong>3</strong><span>Verified tasks</span></div><div><strong>96%</strong><span>Reliability</span></div><div><strong>4</strong><span>Skills proven</span></div></div><div className="v2-evidence"><div><span>Appointment confirmation</span><strong>Verified · 5/5</strong></div><div><span>Customer data cleanup</span><strong>Verified · 5/5</strong></div><div><span>Readiness missions</span><strong>3 passed</strong></div></div></div></div></section>
-  <section className="v2-section v2-business" id="business"><div className="v2-wrap v2-business-grid"><div><div className="v2-kicker" style={{color:"#f6c56d"}}>For small businesses</div><h2>Get the important small work done — without hiring for a full-time role.</h2><p>Choose an outcome, add your business information and review the final result. Nala prepares the worker, structures the task and keeps scope, quality checks and evidence visible.</p><div className="v2-actions"><Link href="/business" className="v2-primary">Open the business workspace <ArrowRight size={17}/></Link></div></div><div className="v2-template-stack">{["Confirm tomorrow’s appointments","Prepare quotation follow-ups","Clean customer spreadsheets","Prepare invoice reminders","Draft review-ready social content"].map((item,index)=><div className="v2-template" key={item}><div><span>0{index+1} · Structured task template</span><strong>{item}</strong></div><BriefcaseBusiness size={20}/></div>)}</div></div></section>
-  <section className="v2-section"><div className="v2-wrap v2-safety"><div><div className="v2-kicker">Trust must be built into the work</div><h2 className="v2-section-title">Starter work should never mean careless or exploitative work.</h2></div><div className="v2-safety-list">{["Payment, time and expected evidence are visible before acceptance.","Job-specific readiness is completed before supported tasks can be accepted.","Workers are guided by approved instructions and clear authority boundaries.","Businesses can verify completed work or request a documented correction.","Readiness results and approved work are recorded separately and transparently.","Demo records stay isolated from future live marketplace data."].map(item=><div className="v2-safety-item" key={item}><ShieldCheck size={18} color="#155d48"/><span>{item}</span></div>)}</div></div></section>
-  <section className="v2-final"><div className="v2-wrap"><div className="v2-final-box"><h2>Nobody should be locked out of work because they have never worked.</h2><p>Nala gives a young person the first safe chance, records what they prove and helps that first task lead somewhere.</p><div className="v2-actions"><Link href="/worker" className="v2-primary">Start building experience <ArrowRight size={18}/></Link><Link href="/business" className="v2-secondary" style={{color:"white",borderColor:"rgba(255,255,255,.38)"}}>Create a task <Building2 size={17}/></Link></div></div></div></section>
- </main>
- <footer className="v2-footer"><div className="v2-wrap v2-footer-inner"><div><strong className="v2-brand">nala<span>.</span></strong><p>Real work. Real proof. Real progress.</p></div><div className="v2-footer-links"><a href="#work">Real work</a><a href="#journey">How it works</a><a href="#practice">Practice</a><a href="#business">For businesses</a></div><div>Built in South Africa · © 2026 Nala</div></div></footer>
- </div>}
+const businessOutcomes=["Confirm tomorrow’s appointments","Prepare quotation follow-ups","Clean customer spreadsheets","Draft social content","Prepare invoice reminders"];
+const safeguards=["No unpaid trial work","Payment shown before acceptance","Verified business and task history","Clear disputes and cancellation rules"];
+
+export default function Home(){
+ return <div className="landing-shell">
+  <Nav/>
+  <main>
+   <section className="hero-stage">
+    <div className="hero-grid">
+     <div className="hero-copy reveal-up">
+      <div className="eyebrow"><span className="eyebrow-dot"/>Built for the first opportunity</div>
+      <h1>Experience should not be the thing that keeps you from getting experience.</h1>
+      <p className="hero-lede">Nala helps young people earn their first income through safe, structured work for real businesses—and turns every completed task into verified proof that they can be trusted with more.</p>
+      <div className="hero-actions">
+       <Link href="/worker" className="primary-cta">Start building experience <ArrowRight size={19}/></Link>
+       <Link href="/business" className="secondary-cta">I run a business <Building2 size={18}/></Link>
+      </div>
+      <div className="trust-line"><ShieldCheck size={17}/><span>Clear scope. Fair payment. Verified work.</span></div>
+     </div>
+
+     <div className="journey-board reveal-up delay-1" aria-label="Example Nala work journey">
+      <div className="journey-topline"><span>THANDI’S FIRST WORK JOURNEY</span><span className="live-pill"><span/>IN PROGRESS</span></div>
+      <div className="journey-person">
+       <div className="portrait-mark">TM</div>
+       <div><strong>Thandi Mokoena</strong><p>22 · Matric · Strong with people</p></div>
+       <div className="journey-score"><Star size={15} fill="currentColor"/> 96%</div>
+      </div>
+      <div className="journey-track">
+       <div className="track-line"/>
+       <div className="journey-node done"><Check size={16}/><span>Practised</span></div>
+       <div className="journey-node active"><BriefcaseBusiness size={16}/><span>Working</span></div>
+       <div className="journey-node"><BadgeCheck size={16}/><span>Verified</span></div>
+       <div className="journey-node"><Sparkles size={16}/><span>Progress</span></div>
+      </div>
+      <div className="task-ticket">
+       <div><span className="ticket-label">CURRENT TASK</span><h3>Confirm 10 salon appointments</h3><p>Lerato Beauty Studio · Remote · 45–60 min</p></div>
+       <div className="ticket-pay"><small>YOU EARN</small><strong>R100</strong></div>
+      </div>
+      <div className="passport-preview">
+       <div className="passport-icon"><BadgeCheck/></div>
+       <div><span>WHAT THIS WILL PROVE</span><strong>Customer communication</strong><p>Plus admin accuracy and reliability</p></div>
+       <ChevronRight/>
+      </div>
+     </div>
+    </div>
+    <div className="hero-footnote"><span>THE GAP NALA CLOSES</span><p>“You need experience to get hired.” <strong>But where does the first experience come from?</strong></p></div>
+   </section>
+
+   <section className="problem-section" id="why-nala">
+    <div className="section-kicker">The problem is not a lack of willingness</div>
+    <div className="problem-grid">
+     <h2>Two groups need each other. They just do not have a safe way to meet.</h2>
+     <div className="problem-copy"><p>Millions of young people can communicate, organise, sell, assist and learn—but have no formal history to prove it.</p><p>At the same time, small businesses lose time and money because useful admin, follow-ups and customer work never gets done.</p></div>
+    </div>
+    <div className="bridge-visual">
+     <article className="bridge-side worker-side"><div className="bridge-icon"><UsersRound/></div><span>YOUNG PEOPLE</span><h3>Ready to work.<br/>Blocked by “no experience.”</h3><ul><li>No references</li><li>No proof of reliability</li><li>No clear first step</li></ul></article>
+     <div className="bridge-centre"><div className="bridge-word">NALA</div><div className="bridge-arrow"><span/><ArrowRight/></div><p>Turns real business needs into safe starter work</p></div>
+     <article className="bridge-side business-side"><div className="bridge-icon"><Building2/></div><span>SMALL BUSINESSES</span><h3>Important work.<br/>Not enough time or staff.</h3><ul><li>Missed follow-ups</li><li>Unconfirmed bookings</li><li>Admin backlog</li></ul></article>
+    </div>
+   </section>
+
+   <section className="how-section" id="how-it-works">
+    <div className="how-heading"><div><span className="section-kicker light">For young people</span><h2>From “no experience” to evidence that speaks for you.</h2></div><p>Nala does not simply send you to another job listing. It helps you create the experience employers keep asking for.</p></div>
+    <div className="steps-list">{workerSteps.map(([number,title,body])=><article key={number} className="step-row"><span className="step-number">{number}</span><h3>{title}</h3><p>{body}</p></article>)}</div>
+    <div className="passport-strip"><div><BadgeCheck size={34}/><span>PROOF-OF-WORK PASSPORT</span></div><p>Instead of only saying “I am hardworking,” show verified tasks, quality scores, skills demonstrated and businesses that would hire you again.</p><Link href="/passport">See an example passport <ArrowRight size={17}/></Link></div>
+   </section>
+
+   <section className="business-section" id="for-business">
+    <div className="business-intro">
+     <span className="section-kicker">For small businesses</span>
+     <h2>Get the important small work done—without hiring for a full-time role.</h2>
+     <p>Choose the outcome you need. Nala turns it into a clear task, prepares the worker, protects both sides and gives you a simple review process.</p>
+     <Link href="/business" className="dark-link">Open the business workspace <ArrowRight size={18}/></Link>
+    </div>
+    <div className="outcome-stack">{businessOutcomes.map((item,index)=><div className="outcome-card" key={item}><span>0{index+1}</span><strong>{item}</strong><ChevronRight/></div>)}</div>
+    <div className="business-value">
+     <div><HeartHandshake/><strong>Affordable support</strong><p>Pay for a defined outcome instead of carrying a full-time salary.</p></div>
+     <div><ShieldCheck/><strong>Lower training burden</strong><p>Workers practise first and receive step-by-step guidance during delivery.</p></div>
+     <div><BadgeCheck/><strong>Discover trusted talent</strong><p>Rebook reliable people or invite them into bigger opportunities later.</p></div>
+    </div>
+   </section>
+
+   <section className="difference-section">
+    <div className="difference-heading"><span className="section-kicker light">Why Nala is different</span><h2>Not another job board. Not another certificate.</h2></div>
+    <div className="comparison-grid">
+     <div className="comparison-muted"><span>TYPICAL JOB PLATFORM</span><h3>Lists opportunities</h3><p>Then asks applicants to already have the experience, references and confidence needed to compete.</p></div>
+     <div className="comparison-arrow"><ArrowRight/></div>
+     <div className="comparison-nala"><span>NALA</span><h3>Creates the first credible experience</h3><p>Practice → paid work → business verification → portable proof → better opportunity.</p></div>
+    </div>
+   </section>
+
+   <section className="safety-section" id="trust">
+    <div className="safety-copy"><span className="section-kicker">Dignity and safety by design</span><h2>Starter work should never mean exploitative work.</h2><p>Nala is designed around transparent expectations, fair treatment and controlled access to business information.</p></div>
+    <div className="safeguard-list">{safeguards.map(item=><div key={item}><span><Check size={15}/></span>{item}</div>)}</div>
+   </section>
+
+   <section className="final-cta">
+    <div className="cta-mark">nala.</div>
+    <h2>Your first chance should lead somewhere.</h2>
+    <p>Earn the first income. Build the first proof. Unlock the next opportunity.</p>
+    <div className="hero-actions centered"><Link href="/worker" className="primary-cta light-cta">Start as a worker <ArrowRight size={19}/></Link><Link href="/business" className="secondary-cta dark-secondary">Create work for someone <Building2 size={18}/></Link></div>
+   </section>
+  </main>
+  <footer className="site-footer"><div><strong>nala.</strong><p>Real work. Real proof. Real progress.</p></div><div className="footer-links"><a href="#why-nala">Why Nala</a><a href="#how-it-works">How it works</a><a href="#for-business">For businesses</a><a href="#trust">Trust & safety</a></div><div className="footer-note">Built in South Africa. Designed to travel.</div></footer>
+ </div>
+}
