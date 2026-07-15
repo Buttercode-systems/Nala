@@ -25,14 +25,32 @@ async function scrollAndCapture(page, name) {
   await page.waitForTimeout(150);
 }
 
-async function assertOrderedNonOverlapping(page, selector) {
+async function assertNoElementOverlap(page, selector) {
   const boxes = await page.locator(selector).evaluateAll(elements => elements.map(element => {
     const rect = element.getBoundingClientRect();
-    return { top: rect.top + window.scrollY, bottom: rect.bottom + window.scrollY, height: rect.height };
+    return {
+      left: rect.left + window.scrollX,
+      right: rect.right + window.scrollX,
+      top: rect.top + window.scrollY,
+      bottom: rect.bottom + window.scrollY,
+      width: rect.width,
+      height: rect.height,
+    };
   }));
-  for (let index = 1; index < boxes.length; index += 1) {
-    expect(boxes[index].top).toBeGreaterThanOrEqual(boxes[index - 1].bottom - 1);
-    expect(boxes[index].height).toBeGreaterThan(0);
+
+  for (const box of boxes) {
+    expect(box.width).toBeGreaterThan(0);
+    expect(box.height).toBeGreaterThan(0);
+  }
+
+  for (let first = 0; first < boxes.length; first += 1) {
+    for (let second = first + 1; second < boxes.length; second += 1) {
+      const a = boxes[first];
+      const b = boxes[second];
+      const overlapWidth = Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
+      const overlapHeight = Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
+      expect(overlapWidth * overlapHeight).toBeLessThanOrEqual(1);
+    }
   }
 }
 
@@ -52,9 +70,9 @@ test('landing repeated content remains structurally stable', async ({ page }) =>
   await expect(page.locator('.starter-task-card')).toHaveCount(3);
   await expect(page.locator('.outcome-card')).toHaveCount(5);
   await expect(page.locator('.step-row')).toHaveCount(4);
-  await assertOrderedNonOverlapping(page, '.starter-task-card');
-  await assertOrderedNonOverlapping(page, '.outcome-card');
-  await assertOrderedNonOverlapping(page, '.step-row');
+  await assertNoElementOverlap(page, '.starter-task-card');
+  await assertNoElementOverlap(page, '.outcome-card');
+  await assertNoElementOverlap(page, '.step-row');
   await scrollAndCapture(page, 'landing-structure');
   await expect(page.locator('.starter-task-card')).toHaveCount(3);
   await expect(page.locator('.outcome-card')).toHaveCount(5);
