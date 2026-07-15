@@ -65,15 +65,35 @@ for (const route of routes) {
   });
 }
 
-test('landing repeated content remains structurally stable', async ({ page }) => {
+test('restored landing remains structurally stable', async ({ page }) => {
   await page.goto('/', { waitUntil: 'networkidle' });
-  await expect(page.locator('.starter-task-card')).toHaveCount(3);
+  await expect(page.locator('.starter-task-card')).toHaveCount(0);
   await expect(page.locator('.outcome-card')).toHaveCount(5);
   await expect(page.locator('.step-row')).toHaveCount(4);
-  await assertNoElementOverlap(page, '.starter-task-card');
   await assertNoElementOverlap(page, '.outcome-card');
   await assertNoElementOverlap(page, '.step-row');
   await scrollAndCapture(page, 'landing-structure');
-  await expect(page.locator('.starter-task-card')).toHaveCount(3);
   await expect(page.locator('.outcome-card')).toHaveCount(5);
+  await expect(page.locator('.step-row')).toHaveCount(4);
+});
+
+test('landing survives repeated mobile and desktop viewport changes', async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 740 });
+  await page.goto('/', { waitUntil: 'networkidle' });
+  await scrollAndCapture(page, 'viewport-mobile-first');
+  await assertNoHorizontalOverflow(page);
+
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.waitForTimeout(200);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await scrollAndCapture(page, 'viewport-desktop-after-mobile');
+  await assertNoHorizontalOverflow(page);
+
+  await page.setViewportSize({ width: 360, height: 740 });
+  await page.waitForTimeout(200);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await scrollAndCapture(page, 'viewport-mobile-again');
+  await assertNoHorizontalOverflow(page);
+  await expect(page.locator('.outcome-card')).toHaveCount(5);
+  await expect(page.locator('.step-row')).toHaveCount(4);
 });
