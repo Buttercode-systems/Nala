@@ -1,0 +1,12 @@
+/* Keep the readable journey card aligned; reserve the playful angle for the decorative layer. */
+@media (min-width: 901px) {
+  .journey-board {
+    transform: none;
+  }
+
+  .journey-board::before {
+    inset: 14px -20px -20px 16px;
+    transform: rotate(-3.2deg);
+    transform-origin: center;
+  }
+}
