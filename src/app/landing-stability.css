@@ -1,0 +1,222 @@
+/* Rendering safety layer for the public landing. Kept isolated from product workspaces. */
+.landing-v2,
+.landing-v2 main,
+.landing-v2 section,
+.landing-v2 article,
+.landing-v2 header,
+.landing-v2 footer {
+  min-width: 0;
+}
+
+.landing-v2 main {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
+.landing-v2 .v2-task-grid,
+.landing-v2 .v2-sim-grid,
+.landing-v2 .v2-timeline,
+.landing-v2 .v2-template-stack,
+.landing-v2 .v2-safety-list {
+  isolation: isolate;
+}
+
+.landing-v2 .v2-market-card,
+.landing-v2 .v2-sim-card,
+.landing-v2 .v2-step,
+.landing-v2 .v2-template,
+.landing-v2 .v2-safety-item,
+.landing-v2 .v2-passport-card,
+.landing-v2 .v2-journey {
+  position: relative;
+  min-width: 0;
+  transform: none;
+  filter: none;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.landing-v2 .v2-market-card,
+.landing-v2 .v2-sim-card,
+.landing-v2 .v2-passport-card,
+.landing-v2 .v2-task,
+.landing-v2 .v2-template,
+.landing-v2 .v2-safety-item {
+  overflow: hidden;
+}
+
+.landing-v2 .v2-market-card h3,
+.landing-v2 .v2-sim-card h3,
+.landing-v2 .v2-step h3,
+.landing-v2 .v2-story h2,
+.landing-v2 .v2-section-title,
+.landing-v2 .v2-hero h1 {
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+@media (max-width: 900px) {
+  .landing-v2 .v2-nav {
+    position: relative;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--nala-cream);
+  }
+
+  .landing-v2 .v2-hero-grid,
+  .landing-v2 .v2-story,
+  .landing-v2 .v2-passport,
+  .landing-v2 .v2-business-grid,
+  .landing-v2 .v2-safety,
+  .landing-v2 .v2-task-grid,
+  .landing-v2 .v2-sim-grid,
+  .landing-v2 .v2-safety-list {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .landing-v2 .v2-task-grid,
+  .landing-v2 .v2-sim-grid {
+    gap: 18px;
+  }
+
+  .landing-v2 .v2-market-card,
+  .landing-v2 .v2-sim-card,
+  .landing-v2 .v2-step,
+  .landing-v2 .v2-template,
+  .landing-v2 .v2-safety-item,
+  .landing-v2 .v2-passport-card,
+  .landing-v2 .v2-journey {
+    contain: layout paint;
+  }
+
+  .landing-v2 .v2-sim-card:nth-child(2) {
+    transform: none !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .landing-v2 {
+    overflow-x: hidden;
+  }
+
+  .landing-v2 *,
+  .landing-v2 *::before,
+  .landing-v2 *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .landing-v2 .v2-wrap {
+    width: calc(100% - 32px);
+  }
+
+  .landing-v2 .v2-hero {
+    padding: 44px 0 56px;
+  }
+
+  .landing-v2 .v2-hero h1 {
+    max-width: 12ch;
+    font-size: clamp(44px, 13vw, 58px);
+    line-height: .96;
+    letter-spacing: -.052em;
+  }
+
+  .landing-v2 .v2-hero-lede {
+    font-size: 17px;
+    line-height: 1.58;
+  }
+
+  .landing-v2 .v2-actions {
+    align-items: stretch;
+  }
+
+  .landing-v2 .v2-primary,
+  .landing-v2 .v2-secondary {
+    min-height: 50px;
+  }
+
+  .landing-v2 .v2-journey {
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .landing-v2 .v2-person {
+    align-items: flex-start;
+  }
+
+  .landing-v2 .v2-score {
+    flex: 0 0 auto;
+  }
+
+  .landing-v2 .v2-task-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .landing-v2 .v2-section {
+    padding: 68px 0;
+  }
+
+  .landing-v2 .v2-section-head {
+    margin-bottom: 28px;
+  }
+
+  .landing-v2 .v2-section-title,
+  .landing-v2 .v2-story h2,
+  .landing-v2 .v2-business h2,
+  .landing-v2 .v2-passport h2,
+  .landing-v2 .v2-final h2 {
+    font-size: clamp(38px, 11vw, 50px);
+    line-height: 1;
+  }
+
+  .landing-v2 .v2-market-card {
+    min-height: 0;
+    padding: 20px;
+    border-radius: 22px;
+  }
+
+  .landing-v2 .v2-market-card h3 {
+    font-size: 28px;
+  }
+
+  .landing-v2 .v2-meta {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .landing-v2 .v2-story {
+    gap: 34px;
+  }
+
+  .landing-v2 .v2-timeline::before {
+    left: 18px;
+  }
+
+  .landing-v2 .v2-step {
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 16px;
+    padding-bottom: 28px;
+  }
+
+  .landing-v2 .v2-step-num {
+    width: 38px;
+    height: 38px;
+  }
+
+  .landing-v2 .v2-step h3 {
+    font-size: 22px;
+  }
+
+  .landing-v2 .v2-passport-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .landing-v2 .v2-passport-stats div {
+    padding: 12px 10px;
+  }
+
+  .landing-v2 .v2-evidence div {
+    align-items: flex-start;
+  }
+}
