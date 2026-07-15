@@ -42,7 +42,7 @@ Core loop:
 
 ## Truth rules
 
-Do not publish invented partners, impact statistics, testimonials, worker outcomes, guaranteed income, guaranteed employment, launch dates or certification claims. Demonstration personas and amounts must be explicitly framed as examples outside the product demo.
+Publish only claims supported by approved product evidence. Use clearly labelled examples for demonstration people, amounts and outcomes. Replace every proof placeholder with reviewed source material before publication.
 
 ## Production package
 
