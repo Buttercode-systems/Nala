@@ -1,6 +1,6 @@
 import {createServerClient} from "@supabase/ssr";
 import {NextResponse,type NextRequest} from "next/server";
-import {NALA_SUPABASE_PUBLISHABLE_KEY,NALA_SUPABASE_URL} from "@/lib/market-data";
+import {NALA_SUPABASE_PUBLISHABLE_KEY,NALA_SUPABASE_URL} from "@/lib/supabase/config";
 
 export async function refreshSupabaseSession(request:NextRequest){
  let response=NextResponse.next({request});
