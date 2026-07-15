@@ -1,0 +1,13 @@
+.workspace-switch{display:none!important}
+.workspace-role-worker .app-topbar{border-bottom-color:rgba(29,81,59,.18)}
+.workspace-role-business .app-topbar{border-bottom-color:rgba(200,111,76,.22);background:#fffaf2}
+.workspace-role-business .persona-card{background:#2f211b}
+.workspace-role-business .side-nav button.active{background:#c86f4c;color:#fff}
+.workspace-role-business .page-eyebrow{color:#9a4d31}
+.workspace-role-admin .persona-card{background:#20232a}
+.workspace-role-admin .side-nav button.active{background:#20232a;color:#fff}
+.workspace-role-worker .app-topbar::after,.workspace-role-business .app-topbar::after,.workspace-role-admin .app-topbar::after{margin-left:auto;margin-right:14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.72);padding:7px 11px;font-size:10px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.workspace-role-worker .app-topbar::after{content:"Worker workspace"}
+.workspace-role-business .app-topbar::after{content:"Business workspace"}
+.workspace-role-admin .app-topbar::after{content:"Operations workspace"}
+@media(max-width:720px){.workspace-role-worker .app-topbar::after,.workspace-role-business .app-topbar::after,.workspace-role-admin .app-topbar::after{display:none}}
