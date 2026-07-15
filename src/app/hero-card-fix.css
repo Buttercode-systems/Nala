@@ -1,13 +1,30 @@
-/* Treat the desktop journey visual as one physical card: panel, text and controls share the same rotation. */
+/* Desktop journey visual: rotate the complete composition once.
+   The backing layer is offset only, so every visible edge remains parallel
+   to the text, controls, dividers and inner panels. */
 @media (min-width: 901px) {
   .journey-board {
-    transform: rotate(-2deg);
+    transform: rotate(-1.35deg);
     transform-origin: center;
+    isolation: isolate;
   }
 
   .journey-board::before {
     inset: 14px -20px -20px 16px;
-    transform: rotate(0.8deg);
+    transform: none;
     transform-origin: center;
+  }
+
+  .journey-topline,
+  .journey-person,
+  .journey-track,
+  .task-ticket,
+  .passport-preview {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .task-ticket,
+  .passport-preview {
+    align-items: center;
   }
 }
