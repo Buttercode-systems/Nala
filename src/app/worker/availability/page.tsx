@@ -3,7 +3,7 @@ import {ArrowLeft,ArrowRight,BadgeCheck,Bell,Clock3,MapPin,Sparkles} from "lucid
 import {getPublicMarketData,healthLabel} from "@/lib/market-data";
 import {availabilityState} from "@/lib/market-operations";
 
-export const dynamic="force-dynamic";
+export const revalidate=60;
 
 const stateCopy={
  available:{title:"Suitable funded work is available",body:"Review scope, pay and readiness before accepting.",action:"Browse available work",href:"/worker"},
@@ -19,10 +19,10 @@ export default async function WorkerAvailabilityPage(){
  const cell=cells[0];
  const state=availabilityState({fundedTasks:cell?.funded_open_task_count||0,activeWorkers:cell?.active_worker_count||0,ready:true});
  const copy=stateCopy[state];
- const lastReviewed=cell?.last_reviewed_at?new Intl.DateTimeFormat("en-ZA",{dateStyle:"medium",timeStyle:"short"}).format(new Date(cell.last_reviewed_at)):"Pilot operations review pending";
+ const lastReviewed=cell?.last_reviewed_at?new Intl.DateTimeFormat("en-ZA",{dateStyle:"medium",timeStyle:"short",timeZone:"Africa/Johannesburg"}).format(new Date(cell.last_reviewed_at)):"Pilot operations review pending";
 
- return <main className="min-h-screen overflow-x-hidden bg-[#f3efe6] px-3 py-4 text-[#12211a] sm:px-5 sm:py-6 lg:px-8 lg:py-8">
-  <div className="mx-auto w-full max-w-6xl min-w-0">
+ return <main className="min-h-screen bg-[#f3efe6] px-3 py-4 text-[#12211a] [overflow-anchor:none] sm:px-5 sm:py-6 lg:px-8 lg:py-8">
+  <div className="mx-auto w-full min-w-0 max-w-6xl">
    <Link href="/worker" className="inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-bold shadow-sm"><ArrowLeft size={16}/>Back to worker workspace</Link>
 
    <header className="mt-5 min-w-0 overflow-hidden rounded-[24px] bg-[#0d2b20] px-5 py-7 text-white sm:rounded-[30px] sm:p-8 lg:p-10">
@@ -32,7 +32,7 @@ export default async function WorkerAvailabilityPage(){
    </header>
 
    <section className="mt-4 min-w-0 rounded-[24px] border border-black/10 bg-white p-5 sm:mt-5 sm:rounded-[28px] sm:p-7 lg:p-8">
-    <div className="grid min-w-0 gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
+    <div className="grid min-w-0 gap-5 lg:grid-cols-[minmax(0,1fr)_56px] lg:items-start">
      <div className="min-w-0">
       <span className="inline-flex max-w-full rounded-full bg-[#fff6df] px-3 py-2 text-[10px] font-black uppercase leading-4 tracking-[.1em] sm:text-xs sm:tracking-[.12em]">{healthLabel(cell?.health_band||"building_supply")}</span>
       <h2 className="mt-4 break-words text-2xl font-black leading-tight sm:text-3xl lg:text-4xl">{copy.title}</h2>
@@ -44,7 +44,7 @@ export default async function WorkerAvailabilityPage(){
 
     <div className="mt-6 grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-3">
      <article className="min-w-0 rounded-2xl bg-[#f3efe6] p-4"><MapPin/><strong className="mt-3 block break-words">{cell?.geography||"Gauteng pilot"}</strong><p className="mt-1 break-words text-sm leading-5 text-black/55">{cell?.verticals?.map(humanise).join(" · ")||"Salons · Trades"}</p></article>
-     <article className="min-w-0 rounded-2xl bg-[#f3efe6] p-4"><Clock3/><strong className="mt-3 block">Last reviewed</strong><p className="mt-1 break-words text-sm leading-5 text-black/55">{lastReviewed}</p></article>
+     <article className="min-w-0 rounded-2xl bg-[#f3efe6] p-4"><Clock3/><strong className="mt-3 block">Last reviewed</strong><p className="mt-1 break-words text-sm leading-5 tabular-nums text-black/55">{lastReviewed}</p></article>
      <article className="min-w-0 rounded-2xl bg-[#dff09f] p-4 sm:col-span-2 lg:col-span-1"><BadgeCheck/><strong className="mt-3 block break-words">{products.length} preparation pathways</strong><p className="mt-1 text-sm leading-5 text-black/55">Payment floors and readiness expectations are public.</p></article>
     </div>
    </section>
