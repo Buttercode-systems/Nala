@@ -1,0 +1,52 @@
+"use client";
+
+import Link from "next/link";
+import {useEffect,useMemo,useState} from "react";
+import {ArrowLeft,ArrowRight,BadgeCheck,BriefcaseBusiness,CheckCircle2,CircleDollarSign,Download,Lightbulb,Signal,Target} from "lucide-react";
+import {DEFAULT_GOAL,nextStep,passedSimulations,rankedOpenTasks,readProgressState,strongestCategories,uniqueSkills,verifiedTasks,type ProgressState} from "@/lib/progression";
+
+export function ProgressionHub(){
+ const [state,setState]=useState<ProgressState|null>(null);
+ const [goal,setGoal]=useState(DEFAULT_GOAL);
+ const [recommended,setRecommended]=useState(true);
+ const [lowData,setLowData]=useState(false);
+ useEffect(()=>{
+  const current=readProgressState();setState(current);if(current?.goal)setGoal(current.goal);
+  setLowData(window.localStorage.getItem("nala-low-data-enabled")==="true");
+ },[]);
+ const verified=useMemo(()=>state?verifiedTasks(state):[],[state]);
+ const ranked=useMemo(()=>state?rankedOpenTasks(state):[],[state]);
+ const next=useMemo(()=>state?nextStep(state):null,[state]);
+ const categories=useMemo(()=>state?strongestCategories(state):[],[state]);
+ const skills=useMemo(()=>state?uniqueSkills(state):[],[state]);
+ function saveGoal(){if(!state)return;const nextState={...state,goal};window.localStorage.setItem("nala-sandbox-state-v3",JSON.stringify(nextState));setState(nextState)}
+ async function toggleLowData(){
+  const enabled=!lowData;setLowData(enabled);window.localStorage.setItem("nala-low-data-enabled",String(enabled));
+  if(enabled&&"serviceWorker" in navigator)await navigator.serviceWorker.register("/nala-low-data-sw.js");
+  if(!enabled&&"serviceWorker" in navigator){const registrations=await navigator.serviceWorker.getRegistrations();await Promise.all(registrations.filter(item=>item.active?.scriptURL.includes("nala-low-data-sw.js")).map(item=>item.unregister()))}
+ }
+ if(!state)return <main className="progression-page"><div className="progression-shell"><Link href="/worker" className="progression-back"><ArrowLeft size={16}/>Back to workspace</Link><section className="progression-empty"><h1>No worker record yet</h1><p>Load the worker demo or complete activity in the workspace first. This module reads the same local record without changing the task lifecycle.</p></section></div></main>;
+ const goalPercent=Math.min(100,Math.round((state.earnings/Math.max(goal.target,1))*100));
+ return <main className="progression-page"><div className="progression-shell">
+  <div className="progression-top"><Link href="/worker" className="progression-back"><ArrowLeft size={16}/>Back to workspace</Link><span className="progression-label">Optional progression module</span></div>
+  <header className="progression-hero"><div><p className="progression-eyebrow">Your evidence. Your next step.</p><h1>Progress beyond the first task.</h1><p>Nala uses verified work and passed simulations to explain what you have demonstrated, what to practise, and which suitable task to consider next.</p></div><div className="progression-score"><small>Verified evidence</small><strong>{verified.length}</strong><span>{passedSimulations(state)} simulations passed</span></div></header>
+
+  <section className="progression-grid">
+   <article className="progression-card progression-card-primary"><div className="progression-icon"><Lightbulb size={18}/></div><p className="progression-kicker">My next step</p><h2>{next?.title}</h2><p>{next?.body}</p><div className="progression-reason">{next?.reason}</div>{ranked[0]&&<Link className="progression-action" href={`/tasks/${ranked[0].task.id}`}>View suitable task <ArrowRight size={15}/></Link>}</article>
+   <article className="progression-card"><div className="progression-icon"><Target size={18}/></div><p className="progression-kicker">Strongest evidence</p><h2>{categories[0]?.category||"Still building"}</h2><p>{categories[0]?`${categories[0].count} verified task${categories[0].count===1?"":"s"} support this category.`:"Complete verified work to establish a strongest category."}</p><div className="progression-tags">{skills.slice(0,4).map(skill=><span key={skill}>{skill}</span>)}</div></article>
+  </section>
+
+  <section className="progression-section"><div className="progression-section-head"><div><p className="progression-kicker">Suitable work</p><h2>Recommended without hiding other options</h2><p>Recommendations change the order only. They never automatically block access.</p></div><label className="progression-toggle"><input type="checkbox" checked={recommended} onChange={event=>setRecommended(event.target.checked)}/><span>Recommended order</span></label></div>
+   <div className="progression-task-grid">{(recommended?ranked:[...ranked].sort((a,b)=>a.task.title.localeCompare(b.task.title))).map(item=><Link href={`/tasks/${item.task.id}`} className="progression-task" key={item.task.id}><div><span>{item.task.category}</span><strong>{item.task.title}</strong><p>{item.reasons.join(" · ")}</p></div><b>R{item.task.pay}</b></Link>)}</div>
+  </section>
+
+  <section className="progression-grid">
+   <article className="progression-card"><div className="progression-icon"><CircleDollarSign size={18}/></div><p className="progression-kicker">Economic progress</p><h2>R{state.earnings} verified earnings</h2><p>This is a record of completed work, not a wallet balance and not money held by Nala.</p><div className="progression-progress"><span style={{width:`${goalPercent}%`}}/></div><div className="progression-goal-row"><input aria-label="Goal name" value={goal.name} onChange={event=>setGoal({...goal,name:event.target.value})}/><input aria-label="Goal amount" type="number" min="1" value={goal.target} onChange={event=>setGoal({...goal,target:Number(event.target.value)||1})}/><button onClick={saveGoal}>Save goal</button></div><small>{goalPercent}% of your R{goal.target} {goal.name.toLowerCase()} goal</small></article>
+   <article className="progression-card"><div className="progression-icon"><Download size={18}/></div><p className="progression-kicker">Portable proof</p><h2>Export your Work Passport</h2><p>Create a print-ready, worker-controlled summary containing verified tasks and approved evidence only.</p><Link className="progression-action" href="/worker/passport-export">Open export <ArrowRight size={15}/></Link></article>
+  </section>
+
+  <section className="progression-card progression-low-data"><div><div className="progression-icon"><Signal size={18}/></div><p className="progression-kicker">Low-data resilience</p><h2>Optional cached reading mode</h2><p>Cache the worker hub, previously opened pages and static assets. Acceptance, submission, verification and payment actions remain online-only.</p></div><button onClick={toggleLowData} className={lowData?"enabled":""}>{lowData?<><CheckCircle2 size={16}/>Enabled</>:"Enable low-data mode"}</button></section>
+
+  <section className="progression-boundary"><BadgeCheck size={18}/><p><strong>Safety boundary:</strong> This module is advisory and additive. It does not publish tasks, approve work, release payments, infer qualifications, or alter existing task states.</p></section>
+ </div></main>
+}
