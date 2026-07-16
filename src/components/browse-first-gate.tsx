@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import {useEffect,useMemo,useState} from "react";
 import {createBrowserSupabaseClient} from "@/lib/supabase/browser";
 
@@ -39,7 +38,7 @@ export function BrowseFirstGate({role,children}:{role:"worker"|"business"|"admin
   {authenticated===false&&<div className="border-b border-black/10 bg-[#fff6df] px-4 py-3 text-[#12211a]">
    <div className="mx-auto flex max-w-[1376px] flex-col gap-2 text-sm sm:flex-row sm:items-center sm:justify-between">
     <p><strong>Browse mode:</strong> explore Nala freely. Sign in only when you start a simulation, accept work, submit work, or publish a task.</p>
-    <Link href={authHref} className="shrink-0 font-black underline underline-offset-4">Sign in or create an account</Link>
+    <a href={authHref} className="shrink-0 font-black underline underline-offset-4">Sign in or create an account</a>
    </div>
   </div>}
   {children}
