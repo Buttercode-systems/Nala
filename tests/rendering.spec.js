@@ -22,7 +22,7 @@ async function scrollAndCapture(page, name) {
   for (let y = 0; y < height; y += step) {
     await page.evaluate(value => window.scrollTo(0, value), y);
     await page.waitForTimeout(100);
-    await page.screenshot({ path: `test-results/${name}-${String(index).padStart(2, '0')}.png` });
+    await page.screenshot({ path: `test-results/${name}-${String(index).padStart(2, '0')}.png`, animations:'disabled' });
     index += 1;
   }
   await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
@@ -85,16 +85,18 @@ async function assertAvailabilityScrollStability(page,width,height){
   await page.setViewportSize({width,height});
   await page.goto('/worker/availability',{waitUntil:'networkidle'});
   await expect(page.getByRole('heading',{name:'Know the real market status before you wait for work.'})).toBeVisible();
-  await expect(page.locator('.animate-pulse')).toHaveCount(0);
   const metrics=await page.evaluate(()=>({height:document.documentElement.scrollHeight,width:document.documentElement.scrollWidth}));
-  const positions=[0,Math.floor(metrics.height*.2),Math.floor(metrics.height*.45),Math.floor(metrics.height*.7),metrics.height-height];
+  const positions=[0,Math.floor(metrics.height*.2),Math.floor(metrics.height*.45),Math.floor(metrics.height*.7),Math.max(0,metrics.height-height)];
   for(const y of positions){
-    await page.evaluate(value=>window.scrollTo({top:Math.max(0,value),behavior:'instant'}),y);
-    await page.waitForTimeout(120);
-    const before=await page.evaluate(()=>({scrollY:window.scrollY,height:document.documentElement.scrollHeight,width:document.documentElement.scrollWidth,body:document.body.getBoundingClientRect().width}));
-    await page.waitForTimeout(800);
-    const after=await page.evaluate(()=>({scrollY:window.scrollY,height:document.documentElement.scrollHeight,width:document.documentElement.scrollWidth,body:document.body.getBoundingClientRect().width}));
-    expect(after).toEqual(before);
+    await page.evaluate(value=>window.scrollTo(0,Math.max(0,value)),y);
+    await page.waitForTimeout(200);
+    const beforeMetrics=await page.evaluate(()=>({scrollX:window.scrollX,scrollY:window.scrollY,height:document.documentElement.scrollHeight,width:document.documentElement.scrollWidth,body:document.body.getBoundingClientRect().width}));
+    const beforePixels=await page.screenshot({animations:'disabled'});
+    await page.waitForTimeout(1200);
+    const afterMetrics=await page.evaluate(()=>({scrollX:window.scrollX,scrollY:window.scrollY,height:document.documentElement.scrollHeight,width:document.documentElement.scrollWidth,body:document.body.getBoundingClientRect().width}));
+    const afterPixels=await page.screenshot({animations:'disabled'});
+    expect(afterMetrics).toEqual(beforeMetrics);
+    expect(Buffer.compare(afterPixels,beforePixels)).toBe(0);
   }
   await assertNoHorizontalOverflow(page);
 }
@@ -107,6 +109,7 @@ test('availability stays pixel-stable through the complete mobile and desktop sc
 test('public browsing remains open but starting a simulation asks for authentication',async({page})=>{
   await page.goto('/worker',{waitUntil:'networkidle'});
   await expect(page).toHaveURL(/\/worker$/);
+  await expect(page.getByText('Browse mode:')).toBeVisible();
   await page.getByRole('button',{name:'Demo controls'}).click();
   await page.getByRole('button',{name:/Load worker demo/i}).click();
   await page.getByRole('button',{name:'Practice library'}).click();
@@ -115,6 +118,19 @@ test('public browsing remains open but starting a simulation asks for authentica
   await expect(page).toHaveURL(/\/auth\?/);
   await expect(page.getByText('ACCOUNT REQUIRED FOR THIS ACTION')).toBeVisible();
   await expect(page.getByRole('link',{name:'Continue browsing'})).toBeVisible();
+});
+
+test('business browsing remains open but publishing requires authentication',async({page})=>{
+  await page.goto('/business',{waitUntil:'networkidle'});
+  await expect(page).toHaveURL(/\/business$/);
+  await page.getByRole('button',{name:'Create task'}).first().click();
+  await page.getByLabel('TASK TITLE').fill('Follow up approved quotations');
+  await page.getByLabel('PAYMENT (R)').fill('150');
+  await page.getByLabel('ESTIMATED TIME').fill('60 minutes');
+  await page.getByLabel('SKILLS').fill('Communication, accuracy');
+  await page.getByLabel('WHAT MUST BE COMPLETED?').fill('Prepare approved follow-up messages and record the next action for every supplied quotation.');
+  await page.getByRole('button',{name:'Create and publish task'}).click();
+  await expect(page).toHaveURL(/\/auth\?/);
 });
 
 test('optional account entry renders for both roles without blocking public routes', async ({ page }) => {
