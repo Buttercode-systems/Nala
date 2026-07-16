@@ -8,12 +8,20 @@ const ACTION_TEXT=[
  "start guided simulation","practise again","accept task","submit for review",
  "create and publish task","verify and approve","request correction",
  "record readiness and continue","retry full mission","check my work","continue",
- "submit for structured review","save recurring plan","join waitlist","export passport"
+ "submit for structured review","save recurring plan","join waitlist","export passport",
+ "print / save pdf"
 ];
 
-function isProtectedElement(target:Element){
+function actionLabel(target:Element){
  const button=target.closest("button");
- const text=(button?.textContent||"").trim().toLowerCase();
+ if(button?.textContent?.trim())return button.textContent.trim();
+ const form=target.closest("form");
+ const submit=form?.querySelector("button[type='submit'],button:not([type])") as HTMLButtonElement|null;
+ return submit?.textContent?.trim()||"Continue in Nala";
+}
+
+function isProtectedElement(target:Element){
+ const text=actionLabel(target).toLowerCase();
  if(ACTION_TEXT.some(label=>text.includes(label)))return true;
  return Boolean(target.closest(
   ".simulation-library-card,.readiness-action button,.simulation-shell .simulation-options button,.simulation-shell .sequence-builder button,.simulation-shell select,.simulation-shell textarea,.check-item button,.content-grid textarea,[data-auth-action='required']"
@@ -49,7 +57,7 @@ export function AuthActionGuard(){
       setAuthenticated(true);
       replaying.current=true;
       const button=target.closest("button") as HTMLButtonElement|null;
-      const form=target.closest("form") as HTMLFormElement|null;
+      const form=(target instanceof HTMLFormElement?target:target.closest("form")) as HTMLFormElement|null;
       if(button)button.click();else if(form)form.requestSubmit();
       queueMicrotask(()=>{replaying.current=false});
       return;
@@ -58,7 +66,7 @@ export function AuthActionGuard(){
    }
 
    const next=encodeURIComponent(pathname||"/");
-   const intent=encodeURIComponent((target.closest("button")?.textContent||"Continue in Nala").trim());
+   const intent=encodeURIComponent(actionLabel(target));
    router.push(`/auth?next=${next}&intent=${intent}`);
   }
 
