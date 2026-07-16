@@ -12,6 +12,7 @@ export function Nav(){
     <Link href="/market">Live market</Link>
     <Link href="/partners">For partners</Link>
     <a href="#trust">Trust & safety</a>
+    <Link href="/auth">Sign in</Link>
     <Link href="/worker" className="nav-app">Open Nala <ArrowUpRight size={16}/></Link>
    </nav>
   </div>

@@ -1,14 +1,17 @@
+import {unstable_cache} from "next/cache";
 import {createClient} from "@supabase/supabase-js";
+import {NALA_SUPABASE_PUBLISHABLE_KEY,NALA_SUPABASE_URL} from "@/lib/supabase/config";
 
-export const NALA_SUPABASE_URL=process.env.NEXT_PUBLIC_SUPABASE_URL||"https://cvmycngyaaqfyfeaaszh.supabase.co";
-export const NALA_SUPABASE_PUBLISHABLE_KEY=process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY||"sb_publishable_DpLaemlmu92uqntbAu2dGw_5_3HjSOU";
+export {NALA_SUPABASE_PUBLISHABLE_KEY,NALA_SUPABASE_URL} from "@/lib/supabase/config";
 
 export type MarketHealth={id:string;slug:string;name:string;geography:string;verticals:string[];status:string;worker_capacity:number;active_worker_count:number;funded_open_task_count:number;funded_tasks_per_active_worker:number|null;health_band:string;last_reviewed_at:string|null};
 export type TaskProduct={id:string;slug:string;title:string;category:string;verticals:string[];status:string;outcome:string;source_inputs:string[];completion_checklist:string[];evidence_requirements:string[];prohibited_information:string[];readiness_simulation_id:string|null;expected_active_minutes:number;expected_revision_minutes:number;minimum_worker_pay_cents:number;revision_limit:number;remote_capable:boolean};
 
+type PublicMarketResult={cells:MarketHealth[];products:TaskProduct[];source:"supabase"|"fallback";error?:string};
+
 function client(){return createClient(NALA_SUPABASE_URL,NALA_SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}})}
 
-export async function getPublicMarketData():Promise<{cells:MarketHealth[];products:TaskProduct[];source:"supabase"|"fallback";error?:string}>{
+const loadPublicMarketData=unstable_cache(async():Promise<PublicMarketResult>=>{
  try{
   const supabase=client();
   const [{data:cells,error:cellError},{data:products,error:productError}]=await Promise.all([
@@ -20,7 +23,9 @@ export async function getPublicMarketData():Promise<{cells:MarketHealth[];produc
  }catch(error){
   return {cells:[],products:[],source:"fallback",error:error instanceof Error?error.message:"Market data unavailable"};
  }
-}
+},["nala-public-market-data-v2"],{revalidate:60,tags:["public-market-data"]});
+
+export function getPublicMarketData(){return loadPublicMarketData()}
 
 export function formatRand(cents:number){return new Intl.NumberFormat("en-ZA",{style:"currency",currency:"ZAR",maximumFractionDigits:0}).format(cents/100)}
 export function healthLabel(value:string){return ({building_supply:"Building task supply",severe_worker_oversupply:"Worker intake paused",thin_demand:"Limited task supply",developing:"Controlled cohort growth",healthy:"Healthy pilot capacity",worker_shortage:"Recruiting ready workers"} as Record<string,string>)[value]||value.replaceAll("_"," ")}
