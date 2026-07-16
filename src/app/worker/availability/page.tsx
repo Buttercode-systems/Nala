@@ -1,5 +1,6 @@
 import Link from "next/link";
 import {ArrowLeft,ArrowRight,BadgeCheck,Bell,Clock3,MapPin,Sparkles} from "lucide-react";
+import {WorkerInterestForm} from "@/components/worker-interest-form";
 import {getPublicMarketData,healthLabel} from "@/lib/market-data";
 import {availabilityState} from "@/lib/market-operations";
 
@@ -8,8 +9,8 @@ export const dynamic="force-dynamic";
 const stateCopy={
  available:{title:"Suitable funded work is available",body:"Review scope, pay and readiness before accepting.",action:"Browse available work",href:"/worker"},
  readiness_required:{title:"Work exists, but readiness comes first",body:"Complete the matching simulation to become eligible.",action:"Open practice library",href:"/worker"},
- temporarily_full:{title:"Current tasks are fully allocated",body:"Join the category waitlist and prepare for the next review window.",action:"Register category interest",href:"/market"},
- no_current_demand:{title:"No current funded demand in this cell",body:"Nala will not imply that paid work exists when it does not. Explore preparation pathways and register interest.",action:"Prepare for future work",href:"/worker/growth"}
+ temporarily_full:{title:"Current tasks are fully allocated",body:"Register category interest and prepare for the next review window.",action:"View preparation pathways",href:"#category-interest"},
+ no_current_demand:{title:"No current funded demand in this cell",body:"Nala will not imply that paid work exists when it does not. Explore preparation pathways and register interest.",action:"Register category interest",href:"#category-interest"}
 } as const;
 
 function humanise(value:string){return value.replaceAll("_"," ").replace(/\b\w/g,letter=>letter.toUpperCase())}
@@ -62,6 +63,8 @@ export default async function WorkerAvailabilityPage(){
     <h2 className="text-2xl font-black leading-tight sm:text-3xl">One meaningful next action</h2>
     <p className="mt-2 max-w-4xl text-sm leading-6 text-black/60 sm:text-base sm:leading-7">Complete your profile, select interests, practise a matching pathway, prepare your Work Passport, or register for a category review window. Nala does not use a generic “more work coming soon” message.</p>
    </section>
+
+   <div id="category-interest"><WorkerInterestForm marketCellSlug={cell?.slug}/></div>
   </div>
  </main>;
 }
