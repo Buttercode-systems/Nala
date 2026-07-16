@@ -1,2 +1,11 @@
+import path from "node:path";
 import {defineConfig} from "vitest/config";
-export default defineConfig({test:{environment:"node"}});
+
+export default defineConfig({
+ resolve:{alias:{"@":path.resolve(__dirname,"src")}},
+ test:{
+  environment:"node",
+  include:["src/**/*.test.ts"],
+  exclude:["tests/**","node_modules/**",".next/**"]
+ }
+});
