@@ -10,6 +10,7 @@ export function Nav(){
     <a href="#how-it-works">How it works</a>
     <a href="#for-business">For businesses</a>
     <Link href="/market">Live market</Link>
+    <Link href="/partners">For partners</Link>
     <a href="#trust">Trust & safety</a>
     <Link href="/worker" className="nav-app">Open Nala <ArrowUpRight size={16}/></Link>
    </nav>
