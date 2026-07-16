@@ -13,5 +13,6 @@ jobs:
           node-version: 22
       - run: npm install --no-audit --no-fund
       - run: npm run typecheck
-      - run: npm test
+      - name: Run tests
+        run: npm test > /tmp/vitest.log 2>&1 || (tail -120 /tmp/vitest.log && exit 1)
       - run: npm run build
