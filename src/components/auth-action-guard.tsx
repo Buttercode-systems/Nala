@@ -67,18 +67,15 @@ export function AuthActionGuard(){
 
    const next=encodeURIComponent(pathname||"/");
    const intent=encodeURIComponent(actionLabel(target));
-   router.push(`/auth?next=${next}&intent=${intent}`);
+   const role=pathname?.startsWith("/business")?"business":"worker";
+   router.push((`/auth?role=${role}&next=${next}&intent=${intent}`) as never);
   }
 
   document.addEventListener("click",guard,true);
   document.addEventListener("submit",guard,true);
-  document.addEventListener("change",guard,true);
-  document.addEventListener("input",guard,true);
   return ()=>{
    document.removeEventListener("click",guard,true);
    document.removeEventListener("submit",guard,true);
-   document.removeEventListener("change",guard,true);
-   document.removeEventListener("input",guard,true);
   };
  },[authenticated,pathname,router]);
 
